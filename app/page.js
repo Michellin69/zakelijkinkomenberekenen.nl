@@ -481,7 +481,7 @@ function DGACalc({ nhg, setPage }) {
           <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 12, fontFamily: font }}>Boekjaar {y}</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
             <div style={{ flex: "1 1 160px" }}><Input label="DGA-salaris (bruto jaar)" value={data[i].salaris} onChange={(v) => upd(i, "salaris", v)} hint="Jaarlijks bruto salaris" /></div>
-            <div style={{ flex: "1 1 160px" }}><Input label="Winst voor belasting BV" value={data[i].winst} onChange={(v) => upd(i, "winst", v)} hint="Resultaat v\u00F3\u00F3r Vpb" /></div>
+            <div style={{ flex: "1 1 160px" }}><Input label="Winst voor belasting BV" value={data[i].winst} onChange={(v) => upd(i, "winst", v)} hint="Resultaat voor Vpb" /></div>
             <div style={{ flex: "1 1 160px" }}><Input label="Bijtelling auto" value={data[i].bijt} onChange={(v) => upd(i, "bijt", v)} hint="Optioneel" /></div>
           </div>
         </div>
