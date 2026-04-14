@@ -143,8 +143,8 @@ function Home({ setPage }) {
     <div>
       <div style={{ padding: "72px 20px 56px", textAlign: "center" }}>
         <div style={{ maxWidth: 620, margin: "0 auto" }}>
-          <p style={{ fontSize: 12, fontWeight: 600, color: C.primary, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 16, fontFamily: font }}>Gratis \u00B7 Geen registratie \u00B7 Uw data blijft lokaal</p>
-          <h1 style={{ fontFamily: font, fontSize: "clamp(28px,4.5vw,44px)", fontWeight: 700, lineHeight: 1.15, color: C.text, margin: "0 0 16px", letterSpacing: "-0.025em" }}>
+          <p style={{ fontSize: 12, fontWeight: 600, color: C.primary, letterSpacing: "0.06em", textTransform: "uppercase", marginBottom: 16, fontFamily: font }}> </p>
+         <h1 style={{ fontFamily: font, fontSize: "clamp(28px,4.5vw,44px)", fontWeight: 700, lineHeight: 1.15, color: C.text, margin: "0 0 16px", letterSpacing: "-0.025em" }}>
             Bereken uw toetsinkomen<br />als ondernemer
           </h1>
           <p style={{ fontSize: 16, color: C.textSec, lineHeight: 1.6, margin: "0 0 32px", fontFamily: font }}>
