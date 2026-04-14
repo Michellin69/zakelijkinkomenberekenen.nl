@@ -501,7 +501,7 @@ function DGACalc({ nhg, setPage }) {
             </div>
             <div style={{ fontSize: 12, fontWeight: 600, color: C.textSec, marginTop: 16, marginBottom: 12, fontFamily: font }}>Balanscorrecties</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-              <div style={{ flex: "1 1 200px" }}><Input label="R/C DGA (vordering op DGA)" value={bal.rcDga} onChange={(v) => updB("rcDga", v)} hint="Vrijstelling tot \u20AC17.500" /></div>
+              <div style={{ flex: "1 1 200px" }}><Input label="R/C DGA (vordering op DGA)" value={bal.rcDga} onChange={(v) => updB("rcDga", v)} hint="Vrijstelling tot 17.500" /></div>
               <div style={{ flex: "1 1 200px" }}><Input label="Box 3 vermogen (liquide)" value={bal.box3} onChange={(v) => updB("box3", v)} hint="Positief op EV, activa en vlottend" /></div>
               <div style={{ flex: "1 1 200px" }}><Input label="Achtergestelde leningen" value={bal.achtergest} onChange={(v) => updB("achtergest", v)} hint="Positief op EV" /></div>
               <div style={{ flex: "1 1 200px" }}><Input label="Immateriele vaste activa" value={bal.immat} onChange={(v) => updB("immat", v)} hint="Negatief op EV en balanstotaal" /></div>
