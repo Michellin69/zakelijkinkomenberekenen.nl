@@ -504,7 +504,7 @@ function DGACalc({ nhg, setPage }) {
               <div style={{ flex: "1 1 200px" }}><Input label="R/C DGA (vordering op DGA)" value={bal.rcDga} onChange={(v) => updB("rcDga", v)} hint="Vrijstelling tot \u20AC17.500" /></div>
               <div style={{ flex: "1 1 200px" }}><Input label="Box 3 vermogen (liquide)" value={bal.box3} onChange={(v) => updB("box3", v)} hint="Positief op EV, activa en vlottend" /></div>
               <div style={{ flex: "1 1 200px" }}><Input label="Achtergestelde leningen" value={bal.achtergest} onChange={(v) => updB("achtergest", v)} hint="Positief op EV" /></div>
-              <div style={{ flex: "1 1 200px" }}><Input label="Immateri\u00EBle vaste activa" value={bal.immat} onChange={(v) => updB("immat", v)} hint="Negatief op EV en balanstotaal" /></div>
+              <div style={{ flex: "1 1 200px" }}><Input label="Immateriele vaste activa" value={bal.immat} onChange={(v) => updB("immat", v)} hint="Negatief op EV en balanstotaal" /></div>
               <div style={{ flex: "1 1 200px" }}><Input label="Stille reserve onroerend goed" value={bal.stilleReserve} onChange={(v) => updB("stilleReserve", v)} hint="Positief op EV en balanstotaal" /></div>
               <div style={{ flex: "1 1 200px" }}><Input label="Pensioen eigen beheer / stamrecht" value={bal.pensioen} onChange={(v) => updB("pensioen", v)} hint="Positief op EV" /></div>
             </div>
