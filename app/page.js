@@ -276,7 +276,7 @@ function IBCalc({ nhg, setPage }) {
           <div style={{ fontSize: 13, fontWeight: 600, color: C.text, marginBottom: 12, fontFamily: font }}>Boekjaar {y}</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
             <div style={{ flex: "1 1 220px" }}><Input label="Winst uit onderneming" value={data[i].winst} onChange={(v) => upd(i, "winst", v)} hint="Saldo fiscale winstberekening" /></div>
-            <div style={{ flex: "1 1 220px" }}><Input label="Bijtelling auto (optioneel)" value={data[i].bijt} onChange={(v) => upd(i, "bijt", v)} hint="Priv\u00E9gebruik auto van de zaak" /></div>
+            <div style={{ flex: "1 1 220px" }}><Input label="Bijtelling auto (optioneel)" value={data[i].bijt} onChange={(v) => upd(i, "bijt", v)} hint="Prive gebruik auto van de zaak" /></div>
           </div>
         </div>
       ))}
