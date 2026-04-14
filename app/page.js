@@ -199,7 +199,7 @@ function Home({ setPage }) {
         <div style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: 20, borderRadius: 10, background: C.successBg, border: "1px solid rgba(22,101,52,0.12)" }}>
           <svg width="20" height="20" fill="none" viewBox="0 0 24 24" style={{ flexShrink: 0, marginTop: 1 }}><path d="M12 2C9.2 2 7 4.2 7 7v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7c0-2.8-2.2-5-5-5zm-3 5c0-1.7 1.3-3 3-3s3 1.3 3 3v3H9V7z" fill={C.success} /></svg>
           <div>
-            <div style={{ fontSize: 13, fontWeight: 600, color: C.success, marginBottom: 3, fontFamily: font }}>Uw gegevens blijven priv\u00E9</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: C.success, marginBottom: 3, fontFamily: font }}>Uw gegevens blijven prive</div>
             <div style={{ fontSize: 12, color: C.textSec, lineHeight: 1.5, fontFamily: font }}>Alle berekeningen worden lokaal in uw browser uitgevoerd. Er worden geen gegevens verstuurd of opgeslagen.</div>
           </div>
         </div>
