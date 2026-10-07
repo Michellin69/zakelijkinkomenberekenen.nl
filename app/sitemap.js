@@ -8,6 +8,7 @@ export default function sitemap() {
     { url: `${base}/toetsinkomen-zzp-nhg`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${base}/toetsinkomen-dga`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${base}/toetsinkomen-dga-nhg`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${base}/veelgestelde-vragen`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${base}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.6 },
   ];
 }
