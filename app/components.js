@@ -18,6 +18,33 @@ const pct = (n) =>
   new Intl.NumberFormat("nl-NL", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(n) + "%";
 const num = (v) => parseFloat(v) || 0;
 
+/* Boekjaren: de bezoeker kiest het laatste boekjaar (vorig jaar of dit jaar);
+   de twee jaren daarvoor volgen automatisch. Schuift elk jaar vanzelf mee. */
+const HUIDIG_JAAR = new Date().getFullYear();
+const JAAR_OPTIES = [HUIDIG_JAAR - 1, HUIDIG_JAAR];
+const jarenVanaf = (laatste) => [laatste - 2, laatste - 1, laatste];
+
+function JaarKeuze({ value, onChange }) {
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 12 }}>
+      <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)" }}>Inkomen per boekjaar</div>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ fontSize: 12, color: "var(--text-sec)" }}>Laatste boekjaar</span>
+        <div role="group" aria-label="Laatste boekjaar" style={{ display: "inline-flex", border: "1.5px solid var(--border)", borderRadius: "var(--radius-sm)", overflow: "hidden", background: "#fff" }}>
+          {JAAR_OPTIES.map((j) => (
+            <button key={j} type="button" onClick={() => onChange(j)} aria-pressed={value === j} style={{
+              padding: "6px 14px", border: "none", cursor: "pointer", fontSize: 13,
+              fontWeight: value === j ? 600 : 400,
+              background: value === j ? "var(--primary)" : "transparent",
+              color: value === j ? "#fff" : "var(--text-sec)",
+            }}>{j}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── Nav ───────────────────────────────────────────────────── */
 export function Nav() {
   const pathname = usePathname();
@@ -212,8 +239,9 @@ function Disclaimer({ nhg }) {
 
 /* ── IB Calculator ─────────────────────────────────────────── */
 export function IBCalcPage({ nhg }) {
-  const years = [2023, 2024, 2025];
-  const [data, setData] = useState(years.map((y) => ({ year: y, winst: "", bijt: "" })));
+  const [laatsteJaar, setLaatsteJaar] = useState(HUIDIG_JAAR - 1);
+  const years = jarenVanaf(laatsteJaar);
+  const [data, setData] = useState([0, 1, 2].map(() => ({ winst: "", bijt: "" })));
   const [bal, setBal] = useState({ ev: "", totaalActiva: "", vlActiva: "", vlPassiva: "", or: "", box3: "", achtergest: "", immat: "", stilleReserve: "" });
   const [showBal, setShowBal] = useState(true);
   const [result, setResult] = useState(null);
@@ -222,9 +250,9 @@ export function IBCalcPage({ nhg }) {
   const updB = (k, v) => setBal({ ...bal, [k]: v });
 
   const calc = () => {
-    const rows = data.map((d) => {
+    const rows = data.map((d, i) => {
       const w = num(d.winst), b = num(d.bijt);
-      return { year: d.year, winst: w, bijt: b, toets: w - b };
+      return { year: years[i], winst: w, bijt: b, toets: w - b };
     });
     const filled = rows.filter((r) => r.winst !== 0);
     if (filled.length === 0) return;
@@ -269,9 +297,9 @@ export function IBCalcPage({ nhg }) {
         </p>
       </div>
 
-      <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 12 }}>Inkomen per boekjaar</div>
+      <JaarKeuze value={laatsteJaar} onChange={(j) => { setLaatsteJaar(j); setResult(null); }} />
       {years.map((y, i) => (
-        <div key={y} style={{ padding: 20, borderRadius: "var(--radius)", background: "var(--surface)", boxShadow: "var(--shadow-sm)", marginBottom: 10 }}>
+        <div key={i} style={{ padding: 20, borderRadius: "var(--radius)", background: "var(--surface)", boxShadow: "var(--shadow-sm)", marginBottom: 10 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 14 }}>Boekjaar {y}</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
             <div style={{ flex: "1 1 220px" }}><Input label="Winst uit onderneming" value={data[i].winst} onChange={(v) => upd(i, "winst", v)} hint="Saldo fiscale winstberekening" /></div>
@@ -371,8 +399,9 @@ export function IBCalcPage({ nhg }) {
 
 /* ── DGA Calculator ────────────────────────────────────────── */
 export function DGACalcPage({ nhg }) {
-  const years = [2023, 2024, 2025];
-  const [data, setData] = useState(years.map((y) => ({ year: y, salaris: "", winst: "", bijt: "" })));
+  const [laatsteJaar, setLaatsteJaar] = useState(HUIDIG_JAAR - 1);
+  const years = jarenVanaf(laatsteJaar);
+  const [data, setData] = useState([0, 1, 2].map(() => ({ salaris: "", winst: "", bijt: "" })));
   const [bal, setBal] = useState({ ev: "", totaalActiva: "", vlActiva: "", vlPassiva: "", rcDga: "", box3: "", achtergest: "", immat: "", stilleReserve: "", pensioen: "", dividend: "" });
   const [showBal, setShowBal] = useState(true);
   const [result, setResult] = useState(null);
@@ -384,9 +413,9 @@ export function DGACalcPage({ nhg }) {
   const factorLabel = nhg ? "75%" : "100%";
 
   const calc = () => {
-    const rows = data.map((d) => {
+    const rows = data.map((d, i) => {
       const s = num(d.salaris), w = num(d.winst), b = num(d.bijt);
-      return { year: d.year, salaris: s, winst: w, bijt: b, box1: s - b };
+      return { year: years[i], salaris: s, winst: w, bijt: b, box1: s - b };
     });
     const filled = rows.filter((r) => r.salaris !== 0 || r.winst !== 0);
     if (filled.length === 0) return;
@@ -454,9 +483,9 @@ export function DGACalcPage({ nhg }) {
         </p>
       </div>
 
-      <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 12 }}>Inkomen per boekjaar</div>
+      <JaarKeuze value={laatsteJaar} onChange={(j) => { setLaatsteJaar(j); setResult(null); }} />
       {years.map((y, i) => (
-        <div key={y} style={{ padding: 20, borderRadius: "var(--radius)", background: "var(--surface)", boxShadow: "var(--shadow-sm)", marginBottom: 10 }}>
+        <div key={i} style={{ padding: 20, borderRadius: "var(--radius)", background: "var(--surface)", boxShadow: "var(--shadow-sm)", marginBottom: 10 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 14 }}>Boekjaar {y}</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
             <div style={{ flex: "1 1 160px" }}><Input label="DGA-salaris (bruto jaar)" value={data[i].salaris} onChange={(v) => upd(i, "salaris", v)} hint="Jaarlijks bruto salaris" /></div>
