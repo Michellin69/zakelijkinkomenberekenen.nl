@@ -781,73 +781,112 @@ export function HomePage() {
 /* ── Contact Page ──────────────────────────────────────────── */
 export function ContactPage() {
   const embedUrl = CALENDLY_URL
-    ? `${CALENDLY_URL}${CALENDLY_URL.includes("?") ? "&" : "?"}hide_gdpr_banner=1&primary_color=1a5632`
+    ? `${CALENDLY_URL}${CALENDLY_URL.includes("?") ? "&" : "?"}hide_event_type_details=1&hide_gdpr_banner=1&background_color=ffffff&text_color=111827&primary_color=1a5632`
     : "";
 
-  return (
-    <Section style={{ paddingTop: 48, paddingBottom: 64 }}>
-      <h1 style={{ fontSize: "clamp(22px, 3.5vw, 28px)", fontWeight: 700, margin: "0 0 8px", color: "var(--text)", letterSpacing: "-0.025em" }}>Vrijblijvend adviesgesprek</h1>
-      <p style={{ fontSize: 15, color: "var(--text-sec)", margin: "0 0 32px", lineHeight: 1.6 }}>
-        Wilt u een professionele inkomensanalyse en begeleiding bij uw hypotheekaanvraag? Kies hieronder direct een moment voor een kennismakingsgesprek.
-      </p>
+  const Icoon = ({ d }) => (
+    <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 32, height: 32, borderRadius: 8, background: "var(--primary-light)", flexShrink: 0 }}>
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--primary)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>
+    </span>
+  );
 
-      <div id="afspraak" style={{ borderRadius: 12, background: "var(--surface)", boxShadow: "var(--shadow-md)", overflow: "hidden" }}>
-        <div style={{ padding: "24px 28px 8px" }}>
-          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 6px", color: "var(--text)" }}>Plan uw kennismakingsgesprek</h2>
-          <p style={{ fontSize: 13, color: "var(--text-sec)", margin: 0, lineHeight: 1.6 }}>
-            Kosteloos en vrijblijvend. U ontvangt direct een bevestiging per e-mail.
-          </p>
-        </div>
-        {embedUrl ? (
-          <iframe
-            src={embedUrl}
-            title="Afspraak inplannen bij Lindenburg Financieel Advies"
-            loading="lazy"
-            style={{ display: "block", width: "100%", height: 720, border: "none" }}
-          />
-        ) : (
-          <div style={{ padding: "16px 28px 28px" }}>
-            <p style={{ fontSize: 14, color: "var(--text)", lineHeight: 1.6, margin: "0 0 16px" }}>
-              Online inplannen is binnenkort beschikbaar. Stuur ons tot die tijd een e-mail, dan nemen wij contact met u op voor een afspraak.
-            </p>
-            <a href="mailto:info@zakelijkinkomenberekenen.nl?subject=Kennismakingsgesprek%20aanvragen" style={{
-              display: "inline-block", padding: "11px 26px", borderRadius: 8, background: "var(--primary)",
-              color: "#fff", fontSize: 13, fontWeight: 600,
-            }}>
-              Mail ons voor een afspraak
+  const kenmerken = [
+    { d: "M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z", t: "30 minuten" },
+    { d: "M15 10l4.55-2.28A1 1 0 0121 8.62v6.76a1 1 0 01-1.45.9L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z", t: "Telefonisch of via video" },
+    { d: "M9 12l2 2 4-4M12 21a9 9 0 100-18 9 9 0 000 18z", t: "Kosteloos en vrijblijvend" },
+  ];
+
+  const bespreken = [
+    "Uw onderneming en de cijfers van de afgelopen jaren",
+    "Welk toetsinkomen haalbaar is, met NHG en zonder NHG",
+    "Wat de balanstoets voor uw situatie betekent",
+    "Welke stukken nodig zijn voor uw aanvraag",
+  ];
+
+  return (
+    <Section style={{ maxWidth: 1080, paddingTop: 48, paddingBottom: 64 }}>
+      <div style={{ maxWidth: 640, marginBottom: 32 }}>
+        <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--primary)", marginBottom: 10 }}>Adviesgesprek</div>
+        <h1 style={{ fontSize: "clamp(24px, 4vw, 34px)", fontWeight: 700, margin: "0 0 12px", color: "var(--text)", letterSpacing: "-0.03em", lineHeight: 1.15 }}>
+          Plan direct een kennismakingsgesprek
+        </h1>
+        <p style={{ fontSize: 15, color: "var(--text-sec)", margin: 0, lineHeight: 1.65 }}>
+          Kies hieronder een moment dat u uitkomt. We bespreken uw situatie en wat er nodig is voor een sterke hypotheekaanvraag als ondernemer.
+        </p>
+      </div>
+
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 20, alignItems: "flex-start" }}>
+        {/* Linkerkolom: wat u kunt verwachten */}
+        <aside style={{ flex: "1 1 280px", maxWidth: "100%", display: "flex", flexDirection: "column", gap: 16 }}>
+          <div style={{ padding: 24, borderRadius: 14, background: "var(--surface)", boxShadow: "var(--shadow-md)" }}>
+            <div style={{ fontSize: 13, color: "var(--text-sec)", marginBottom: 4 }}>Lindenburg Financieel Advies</div>
+            <h2 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 18px", color: "var(--text)", letterSpacing: "-0.02em" }}>Kennismakingsgesprek</h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {kenmerken.map((k) => (
+                <div key={k.t} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <Icoon d={k.d} />
+                  <span style={{ fontSize: 14, color: "var(--text)", fontWeight: 500 }}>{k.t}</span>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ height: 1, background: "var(--border-light)", margin: "22px 0 18px" }} />
+
+            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 12 }}>Wat we bespreken</div>
+            {bespreken.map((b) => (
+              <div key={b} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 10 }}>
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" style={{ flexShrink: 0, marginTop: 2 }}>
+                  <path d="M5 12l5 5L20 7" stroke="var(--primary)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span style={{ fontSize: 13.5, color: "var(--text-sec)", lineHeight: 1.55 }}>{b}</span>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ padding: 24, borderRadius: 14, background: "var(--primary)", color: "#fff" }}>
+            <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 6 }}>Liever eerst mailen?</div>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", margin: "0 0 14px", lineHeight: 1.55 }}>Stel uw vraag per e-mail, dan reageren wij zo snel mogelijk.</p>
+            <a href="mailto:info@zakelijkinkomenberekenen.nl" style={{ fontSize: 14, fontWeight: 500, color: "#fff", textDecoration: "underline", textUnderlineOffset: 3, wordBreak: "break-all" }}>
+              info@zakelijkinkomenberekenen.nl
             </a>
           </div>
-        )}
-      </div>
+        </aside>
 
-      <div style={{ marginTop: 20, padding: 28, borderRadius: 12, background: "var(--surface)", boxShadow: "var(--shadow-md)" }}>
-        <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 18px", color: "var(--text)" }}>Wat u kunt verwachten</h2>
-        {[
-          "Professionele inkomensanalyse op maat",
-          "Volledige beoordeling inclusief balanstoets en correcties",
-          "Begeleiding bij uw hypotheektraject bij alle geldverstrekkers",
-          "Persoonlijk contact en advies over de beste financiering",
-        ].map((item, i) => (
-          <div key={i} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 12 }}>
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" style={{ flexShrink: 0, marginTop: 2 }}>
-              <circle cx="12" cy="12" r="10" fill="var(--primary-ghost)" stroke="var(--primary)" strokeWidth="1.5" />
-              <path d="M8 12l3 3 5-5" stroke="var(--primary)" strokeWidth="2" fill="none" />
-            </svg>
-            <span style={{ fontSize: 14, color: "var(--text)", lineHeight: 1.5 }}>{item}</span>
+        {/* Rechterkolom: agenda */}
+        <div id="afspraak" style={{ flex: "2 1 460px", maxWidth: "100%", borderRadius: 14, background: "var(--surface)", boxShadow: "var(--shadow-lg)", overflow: "hidden", border: "1px solid var(--border-light)" }}>
+          <div style={{ padding: "18px 24px", borderBottom: "1px solid var(--border-light)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+            <div style={{ fontSize: 15, fontWeight: 600, color: "var(--text)" }}>Kies een datum en tijd</div>
+            <div style={{ fontSize: 12, color: "var(--text-sec)" }}>U ontvangt direct een bevestiging per e-mail</div>
           </div>
-        ))}
+          {embedUrl ? (
+            <div style={{ position: "relative", minHeight: 700 }}>
+              <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "var(--text-ter)" }}>
+                Agenda wordt geladen…
+              </div>
+              <iframe
+                src={embedUrl}
+                title="Afspraak inplannen bij Lindenburg Financieel Advies"
+                loading="lazy"
+                style={{ position: "relative", display: "block", width: "100%", height: 700, border: "none" }}
+              />
+            </div>
+          ) : (
+            <div style={{ padding: "28px 24px" }}>
+              <p style={{ fontSize: 14, color: "var(--text)", lineHeight: 1.6, margin: "0 0 16px" }}>
+                Online inplannen is binnenkort beschikbaar. Stuur ons tot die tijd een e-mail, dan nemen wij contact met u op voor een afspraak.
+              </p>
+              <a href="mailto:info@zakelijkinkomenberekenen.nl?subject=Kennismakingsgesprek%20aanvragen" style={{
+                display: "inline-block", padding: "11px 26px", borderRadius: 8, background: "var(--primary)",
+                color: "#fff", fontSize: 13, fontWeight: 600,
+              }}>
+                Mail ons voor een afspraak
+              </a>
+            </div>
+          )}
+        </div>
       </div>
 
-      <div style={{ marginTop: 20, padding: 28, borderRadius: 12, background: "var(--primary)", color: "#fff" }}>
-        <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 6px" }}>Liever eerst mailen?</h2>
-        <p style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", margin: "0 0 18px" }}>Lindenburg Financieel Advies, Amstelveen</p>
-        <a href="mailto:info@zakelijkinkomenberekenen.nl" style={{ display: "flex", gap: 10, alignItems: "center", color: "#fff" }}>
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke="#fff" strokeWidth="1.5" /></svg>
-          <span style={{ fontSize: 14, textDecoration: "underline", textUnderlineOffset: 3 }}>info@zakelijkinkomenberekenen.nl</span>
-        </a>
-      </div>
-
-      <div style={{ marginTop: 18, fontSize: 13, color: "var(--text-ter)", textAlign: "center" }}>
+      <div style={{ marginTop: 28, fontSize: 13, color: "var(--text-ter)", textAlign: "center" }}>
         Gespecialiseerd in ondernemersfinanciering
       </div>
     </Section>
