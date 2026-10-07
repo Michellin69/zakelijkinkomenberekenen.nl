@@ -39,7 +39,7 @@ function GewogenSchakelaar({ aan, onChange }) {
    bijvoorbeeld "https://calendly.com/lindenburg/kennismaking".
    Laat leeg ("") zolang je nog geen link hebt: dan toont de
    contactpagina in plaats van de agenda een mailknop. */
-const CALENDLY_URL = "";
+const CALENDLY_URL = "https://calendly.com/zakelijkinkomenberekenen-info/30min";
 
 /* ── Helpers ───────────────────────────────────────────────── */
 const fmt = (n) =>
