@@ -56,6 +56,7 @@ export function Nav() {
     { href: "/toetsinkomen-zzp", label: "IB Regulier" },
     { href: "/toetsinkomen-dga-nhg", label: "DGA NHG" },
     { href: "/toetsinkomen-dga", label: "DGA Regulier" },
+    { href: "/veelgestelde-vragen", label: "FAQ" },
     { href: "/contact", label: "Contact" },
   ];
 
@@ -135,6 +136,7 @@ export function Footer() {
             <div style={{ color: "#fff", fontWeight: 600, marginBottom: 10, fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase" }}>Over ons</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               <Link href="/contact">Adviesgesprek aanvragen</Link>
+              <Link href="/veelgestelde-vragen">Veelgestelde vragen</Link>
               <span>info@zakelijkinkomenberekenen.nl</span>
             </div>
           </div>
