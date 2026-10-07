@@ -4,6 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+/* ── Calendly ──────────────────────────────────────────────────
+   Plak hieronder je Calendly-link tussen de aanhalingstekens,
+   bijvoorbeeld "https://calendly.com/lindenburg/kennismaking".
+   Laat leeg ("") zolang je nog geen link hebt: dan toont de
+   contactpagina in plaats van de agenda een mailknop. */
+const CALENDLY_URL = "";
+
 /* ── Helpers ───────────────────────────────────────────────── */
 const fmt = (n) =>
   new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
@@ -697,14 +704,47 @@ export function HomePage() {
 
 /* ── Contact Page ──────────────────────────────────────────── */
 export function ContactPage() {
+  const embedUrl = CALENDLY_URL
+    ? `${CALENDLY_URL}${CALENDLY_URL.includes("?") ? "&" : "?"}hide_gdpr_banner=1&primary_color=1a5632`
+    : "";
+
   return (
     <Section style={{ paddingTop: 48, paddingBottom: 64 }}>
       <h1 style={{ fontSize: "clamp(22px, 3.5vw, 28px)", fontWeight: 700, margin: "0 0 8px", color: "var(--text)", letterSpacing: "-0.025em" }}>Vrijblijvend adviesgesprek</h1>
       <p style={{ fontSize: 15, color: "var(--text-sec)", margin: "0 0 32px", lineHeight: 1.6 }}>
-        Wilt u een professionele inkomensanalyse en begeleiding bij uw hypotheekaanvraag? Neem vrijblijvend contact op.
+        Wilt u een professionele inkomensanalyse en begeleiding bij uw hypotheekaanvraag? Kies hieronder direct een moment voor een kennismakingsgesprek.
       </p>
 
-      <div style={{ padding: 28, borderRadius: 12, background: "var(--surface)", boxShadow: "var(--shadow-md)" }}>
+      <div id="afspraak" style={{ borderRadius: 12, background: "var(--surface)", boxShadow: "var(--shadow-md)", overflow: "hidden" }}>
+        <div style={{ padding: "24px 28px 8px" }}>
+          <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 6px", color: "var(--text)" }}>Plan uw kennismakingsgesprek</h2>
+          <p style={{ fontSize: 13, color: "var(--text-sec)", margin: 0, lineHeight: 1.6 }}>
+            Kosteloos en vrijblijvend. U ontvangt direct een bevestiging per e-mail.
+          </p>
+        </div>
+        {embedUrl ? (
+          <iframe
+            src={embedUrl}
+            title="Afspraak inplannen bij Lindenburg Financieel Advies"
+            loading="lazy"
+            style={{ display: "block", width: "100%", height: 720, border: "none" }}
+          />
+        ) : (
+          <div style={{ padding: "16px 28px 28px" }}>
+            <p style={{ fontSize: 14, color: "var(--text)", lineHeight: 1.6, margin: "0 0 16px" }}>
+              Online inplannen is binnenkort beschikbaar. Stuur ons tot die tijd een e-mail, dan nemen wij contact met u op voor een afspraak.
+            </p>
+            <a href="mailto:info@zakelijkinkomenberekenen.nl?subject=Kennismakingsgesprek%20aanvragen" style={{
+              display: "inline-block", padding: "11px 26px", borderRadius: 8, background: "var(--primary)",
+              color: "#fff", fontSize: 13, fontWeight: 600,
+            }}>
+              Mail ons voor een afspraak
+            </a>
+          </div>
+        )}
+      </div>
+
+      <div style={{ marginTop: 20, padding: 28, borderRadius: 12, background: "var(--surface)", boxShadow: "var(--shadow-md)" }}>
         <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 18px", color: "var(--text)" }}>Wat u kunt verwachten</h2>
         {[
           "Professionele inkomensanalyse op maat",
@@ -723,18 +763,12 @@ export function ContactPage() {
       </div>
 
       <div style={{ marginTop: 20, padding: 28, borderRadius: 12, background: "var(--primary)", color: "#fff" }}>
-        <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 6px" }}>Contact</h2>
-        <p style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", margin: "0 0 18px" }}>Lindenburg Financieel Advies &middot; Amstelveen</p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke="#fff" strokeWidth="1.5" /></svg>
-            <span style={{ fontSize: 14 }}>info@zakelijkinkomenberekenen.nl</span>
-          </div>
-          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-            <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="#fff" strokeWidth="1.5" /></svg>
-            <span style={{ fontSize: 14 }}>Telefoonnummer op aanvraag</span>
-          </div>
-        </div>
+        <h2 style={{ fontSize: 17, fontWeight: 600, margin: "0 0 6px" }}>Liever eerst mailen?</h2>
+        <p style={{ fontSize: 13, color: "rgba(255,255,255,0.65)", margin: "0 0 18px" }}>Lindenburg Financieel Advies, Amstelveen</p>
+        <a href="mailto:info@zakelijkinkomenberekenen.nl" style={{ display: "flex", gap: 10, alignItems: "center", color: "#fff" }}>
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><path d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke="#fff" strokeWidth="1.5" /></svg>
+          <span style={{ fontSize: 14, textDecoration: "underline", textUnderlineOffset: 3 }}>info@zakelijkinkomenberekenen.nl</span>
+        </a>
       </div>
 
       <div style={{ marginTop: 18, fontSize: 13, color: "var(--text-ter)", textAlign: "center" }}>
