@@ -126,7 +126,7 @@ export function Section({ children, style }) {
   return <section style={{ maxWidth: 780, margin: "0 auto", padding: "0 24px", ...style }}>{children}</section>;
 }
 
-export function Input({ label, value, onChange, hint, prefix = "\u20AC" }) {
+export function Input({ label, value, onChange, hint, prefix = "€" }) {
   return (
     <div style={{ marginBottom: 14 }}>
       <label style={{ display: "block", fontSize: 12, fontWeight: 500, color: "var(--text-sec)", marginBottom: 5, letterSpacing: "0.01em" }}>{label}</label>
@@ -153,7 +153,7 @@ function StatusBadge({ ok, label }) {
       background: ok ? "var(--success-bg)" : "var(--danger-bg)",
       color: ok ? "var(--success)" : "var(--danger)",
     }}>
-      {ok ? "\u2713" : "\u2717"} {label}
+      {ok ? "✓" : "✗"} {label}
     </span>
   );
 }
@@ -263,8 +263,8 @@ export function IBCalcPage({ nhg }) {
         </h1>
         <p style={{ fontSize: 15, color: "var(--text-sec)", margin: 0, lineHeight: 1.6 }}>
           {nhg
-            ? "Bereken uw toetsinkomen als ZZP\u2019er, eenmanszaak of VoF conform NHG-toetskaders, inclusief balanstoets (solvabiliteit \u226525% en liquiditeit \u22651)."
-            : "Bereken uw toetsinkomen als ZZP\u2019er, eenmanszaak of VoF conform reguliere normen van geldverstrekkers, inclusief balanstoets."
+            ? "Bereken uw toetsinkomen als ZZP’er, eenmanszaak of VoF conform NHG-toetskaders, inclusief balanstoets (solvabiliteit ≥25% en liquiditeit ≥1)."
+            : "Bereken uw toetsinkomen als ZZP’er, eenmanszaak of VoF conform reguliere normen van geldverstrekkers, inclusief balanstoets."
           }
         </p>
       </div>
@@ -275,7 +275,7 @@ export function IBCalcPage({ nhg }) {
           <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 14 }}>Boekjaar {y}</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
             <div style={{ flex: "1 1 220px" }}><Input label="Winst uit onderneming" value={data[i].winst} onChange={(v) => upd(i, "winst", v)} hint="Saldo fiscale winstberekening" /></div>
-            <div style={{ flex: "1 1 220px" }}><Input label="Bijtelling auto (optioneel)" value={data[i].bijt} onChange={(v) => upd(i, "bijt", v)} hint="Priv\u00E9gebruik auto van de zaak" /></div>
+            <div style={{ flex: "1 1 220px" }}><Input label="Bijtelling auto (optioneel)" value={data[i].bijt} onChange={(v) => upd(i, "bijt", v)} hint="Privégebruik auto van de zaak" /></div>
           </div>
         </div>
       ))}
@@ -294,7 +294,7 @@ export function IBCalcPage({ nhg }) {
             <div style={{ flex: "1 1 200px" }}><Input label="Oudedagsreserve (FOR)" value={bal.or} onChange={(v) => updB("or", v)} hint="Positief op EV" /></div>
             <div style={{ flex: "1 1 200px" }}><Input label="Box 3 vermogen (liquide)" value={bal.box3} onChange={(v) => updB("box3", v)} hint="Positief op EV, activa en vlottend" /></div>
             <div style={{ flex: "1 1 200px" }}><Input label="Achtergestelde leningen" value={bal.achtergest} onChange={(v) => updB("achtergest", v)} hint="Positief op EV" /></div>
-            <div style={{ flex: "1 1 200px" }}><Input label="Immateri\u00EBle vaste activa" value={bal.immat} onChange={(v) => updB("immat", v)} hint="Negatief op EV en balanstotaal" /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Immateriële vaste activa" value={bal.immat} onChange={(v) => updB("immat", v)} hint="Negatief op EV en balanstotaal" /></div>
             <div style={{ flex: "1 1 200px" }}><Input label="Stille reserve onroerend goed" value={bal.stilleReserve} onChange={(v) => updB("stilleReserve", v)} hint="Positief op EV en balanstotaal" /></div>
           </div>
         </div>
@@ -338,14 +338,14 @@ export function IBCalcPage({ nhg }) {
                 <span style={{ fontSize: 13, color: "var(--text-sec)" }}>Solvabiliteit</span>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                   <span style={{ fontSize: 14, fontWeight: 600, color: "var(--text)" }}>{pct(result.solvabiliteit)}</span>
-                  <StatusBadge ok={result.solvOk} label={result.solvOk ? "\u226525%" : "<25%"} />
+                  <StatusBadge ok={result.solvOk} label={result.solvOk ? "≥25%" : "<25%"} />
                 </div>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid var(--border-light)" }}>
                 <span style={{ fontSize: 13, color: "var(--text-sec)" }}>Liquiditeit</span>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                   <span style={{ fontSize: 14, fontWeight: 600, color: "var(--text)" }}>{result.liquiditeit >= 999 ? ">99" : result.liquiditeit.toFixed(2)}</span>
-                  <StatusBadge ok={result.liqOk} label={result.liqOk ? "\u22651,00" : "<1,00"} />
+                  <StatusBadge ok={result.liqOk} label={result.liqOk ? "≥1,00" : "<1,00"} />
                 </div>
               </div>
               {(!result.solvOk || !result.liqOk) && (
@@ -448,8 +448,8 @@ export function DGACalcPage({ nhg }) {
         </h1>
         <p style={{ fontSize: 15, color: "var(--text-sec)", margin: 0, lineHeight: 1.6 }}>
           {nhg
-            ? "Bereken uw toetsinkomen als DGA (\u22655% aandeelhouder) conform NHG-toetskaders. Inclusief dubbele balanstoets en overwinst (75%)."
-            : "Bereken uw toetsinkomen als DGA (\u22655% aandeelhouder) conform reguliere normen. Inclusief dubbele balanstoets en overwinst (100%)."
+            ? "Bereken uw toetsinkomen als DGA (≥5% aandeelhouder) conform NHG-toetskaders. Inclusief dubbele balanstoets en overwinst (75%)."
+            : "Bereken uw toetsinkomen als DGA (≥5% aandeelhouder) conform reguliere normen. Inclusief dubbele balanstoets en overwinst (100%)."
           }
         </p>
       </div>
@@ -477,10 +477,10 @@ export function DGACalcPage({ nhg }) {
           </div>
           <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-sec)", marginTop: 18, marginBottom: 14 }}>Balanscorrecties</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-            <div style={{ flex: "1 1 200px" }}><Input label="R/C DGA (vordering op DGA)" value={bal.rcDga} onChange={(v) => updB("rcDga", v)} hint="Vrijstelling tot \u20AC17.500" /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="R/C DGA (vordering op DGA)" value={bal.rcDga} onChange={(v) => updB("rcDga", v)} hint="Vrijstelling tot €17.500" /></div>
             <div style={{ flex: "1 1 200px" }}><Input label="Box 3 vermogen (liquide)" value={bal.box3} onChange={(v) => updB("box3", v)} hint="Positief op EV, activa en vlottend" /></div>
             <div style={{ flex: "1 1 200px" }}><Input label="Achtergestelde leningen" value={bal.achtergest} onChange={(v) => updB("achtergest", v)} hint="Positief op EV" /></div>
-            <div style={{ flex: "1 1 200px" }}><Input label="Immateri\u00EBle vaste activa" value={bal.immat} onChange={(v) => updB("immat", v)} hint="Negatief op EV en balanstotaal" /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Immateriële vaste activa" value={bal.immat} onChange={(v) => updB("immat", v)} hint="Negatief op EV en balanstotaal" /></div>
             <div style={{ flex: "1 1 200px" }}><Input label="Stille reserve onroerend goed" value={bal.stilleReserve} onChange={(v) => updB("stilleReserve", v)} hint="Positief op EV en balanstotaal" /></div>
             <div style={{ flex: "1 1 200px" }}><Input label="Pensioen eigen beheer / stamrecht" value={bal.pensioen} onChange={(v) => updB("pensioen", v)} hint="Positief op EV" /></div>
           </div>
@@ -509,7 +509,7 @@ export function DGACalcPage({ nhg }) {
               <span style={{ color: "var(--text-sec)" }}>{r.year}</span>
               <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
                 <span style={{ color: "var(--text-ter)", fontSize: 11 }}>
-                  Salaris: {fmt(r.salaris)}{r.bijt > 0 ? ` \u2212 bijt: ${fmt(r.bijt)}` : ""}
+                  Salaris: {fmt(r.salaris)}{r.bijt > 0 ? ` − bijt: ${fmt(r.bijt)}` : ""}
                 </span>
                 <span style={{ fontWeight: 600, color: "var(--text)" }}>{fmt(r.box1)}</span>
               </div>
@@ -522,19 +522,19 @@ export function DGACalcPage({ nhg }) {
               <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text-ter)", marginTop: 22, marginBottom: 8, letterSpacing: "0.04em", textTransform: "uppercase" }}>Balanstoets</div>
               <ResultLine label="Eigen vermogen na correcties" value={fmt(Math.round(result.evCorr))} />
               <ResultLine label="Balanstotaal na correcties" value={fmt(Math.round(result.taCorr))} />
-              {result.rcCorr > 0 && <ResultLine label="R/C DGA correctie (boven \u20AC17.500)" value={fmt(Math.round(result.rcCorr))} />}
+              {result.rcCorr > 0 && <ResultLine label="R/C DGA correctie (boven €17.500)" value={fmt(Math.round(result.rcCorr))} />}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid var(--border-light)" }}>
                 <span style={{ fontSize: 13, color: "var(--text-sec)" }}>Solvabiliteit</span>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                   <span style={{ fontSize: 14, fontWeight: 600, color: "var(--text)" }}>{pct(result.solvabiliteit)}</span>
-                  <StatusBadge ok={result.solvOk} label={result.solvOk ? "\u226525%" : "<25%"} />
+                  <StatusBadge ok={result.solvOk} label={result.solvOk ? "≥25%" : "<25%"} />
                 </div>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid var(--border-light)" }}>
                 <span style={{ fontSize: 13, color: "var(--text-sec)" }}>Liquiditeit</span>
                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                   <span style={{ fontSize: 14, fontWeight: 600, color: "var(--text)" }}>{result.liquiditeit >= 999 ? ">99" : result.liquiditeit.toFixed(2)}</span>
-                  <StatusBadge ok={result.liqOk} label={result.liqOk ? "\u22651,00" : "<1,00"} />
+                  <StatusBadge ok={result.liqOk} label={result.liqOk ? "≥1,00" : "<1,00"} />
                 </div>
               </div>
 
@@ -592,10 +592,10 @@ export function DGACalcPage({ nhg }) {
 /* ── Home Page ─────────────────────────────────────────────── */
 export function HomePage() {
   const calcs = [
-    { href: "/toetsinkomen-zzp-nhg", tag: "NHG", title: "IB-ondernemer", sub: "Eenmanszaak \u00B7 ZZP \u00B7 VoF \u00B7 Maatschap", desc: "Toetsinkomen conform NHG-toetskaders met balanstoets (solvabiliteit en liquiditeit)." },
-    { href: "/toetsinkomen-zzp", tag: "Regulier", title: "IB-ondernemer", sub: "Eenmanszaak \u00B7 ZZP \u00B7 VoF \u00B7 Maatschap", desc: "Toetsinkomen conform reguliere normen van geldverstrekkers met balanstoets." },
-    { href: "/toetsinkomen-dga-nhg", tag: "NHG", title: "DGA / BV", sub: "Holding \u00B7 Werk-BV \u00B7 \u22655% aandeelhouder", desc: "DGA-salaris + overwinst (75%) met dubbele balanstoets." },
-    { href: "/toetsinkomen-dga", tag: "Regulier", title: "DGA / BV", sub: "Holding \u00B7 Werk-BV \u00B7 \u22655% aandeelhouder", desc: "DGA-salaris + overwinst (100%) met dubbele balanstoets." },
+    { href: "/toetsinkomen-zzp-nhg", tag: "NHG", title: "IB-ondernemer", sub: "Eenmanszaak · ZZP · VoF · Maatschap", desc: "Toetsinkomen conform NHG-toetskaders met balanstoets (solvabiliteit en liquiditeit)." },
+    { href: "/toetsinkomen-zzp", tag: "Regulier", title: "IB-ondernemer", sub: "Eenmanszaak · ZZP · VoF · Maatschap", desc: "Toetsinkomen conform reguliere normen van geldverstrekkers met balanstoets." },
+    { href: "/toetsinkomen-dga-nhg", tag: "NHG", title: "DGA / BV", sub: "Holding · Werk-BV · ≥5% aandeelhouder", desc: "DGA-salaris + overwinst (75%) met dubbele balanstoets." },
+    { href: "/toetsinkomen-dga", tag: "Regulier", title: "DGA / BV", sub: "Holding · Werk-BV · ≥5% aandeelhouder", desc: "DGA-salaris + overwinst (100%) met dubbele balanstoets." },
   ];
 
   return (
@@ -660,9 +660,9 @@ export function HomePage() {
         {[
           { q: "Wat is toetsinkomen?", a: "Het toetsinkomen is het inkomen dat een geldverstrekker hanteert om te bepalen hoeveel hypotheek u kunt krijgen. Voor ondernemers wordt dit berekend op basis van de winst of het salaris van de afgelopen jaren." },
           { q: "Wat is het verschil tussen NHG en regulier?", a: "Bij NHG (Nationale Hypotheek Garantie) wordt 75% van de overwinst meegenomen, bij reguliere geldverstrekkers is dat 100%. NHG biedt een vangnet bij betalingsproblemen maar kent ook een maximale hypotheekgrens." },
-          { q: "Wat is de balanstoets?", a: "De balanstoets beoordeelt de financi\u00EBle gezondheid van uw onderneming. Er wordt gekeken naar solvabiliteit (eigen vermogen ten opzichte van het totaal) en liquiditeit (kunt u op korte termijn aan uw verplichtingen voldoen)." },
-          { q: "Wat is de dubbele balanstoets bij DGA\u2019s?", a: "Bij DGA\u2019s wordt naast de gewone solvabiliteits- en liquiditeitstoets ook berekend hoeveel er maximaal aan de BV onttrokken kan worden (solvabiliteitsruimte en liquiditeitsruimte). De laagste van deze twee bepaalt de maximale overwinst." },
-          { q: "Zijn mijn gegevens veilig?", a: "Ja. Alle berekeningen worden volledig in uw browser uitgevoerd. Er worden geen gegevens verstuurd naar een server en er wordt niets opgeslagen. Uw financi\u00EBle informatie verlaat uw apparaat niet." },
+          { q: "Wat is de balanstoets?", a: "De balanstoets beoordeelt de financiële gezondheid van uw onderneming. Er wordt gekeken naar solvabiliteit (eigen vermogen ten opzichte van het totaal) en liquiditeit (kunt u op korte termijn aan uw verplichtingen voldoen)." },
+          { q: "Wat is de dubbele balanstoets bij DGA’s?", a: "Bij DGA’s wordt naast de gewone solvabiliteits- en liquiditeitstoets ook berekend hoeveel er maximaal aan de BV onttrokken kan worden (solvabiliteitsruimte en liquiditeitsruimte). De laagste van deze twee bepaalt de maximale overwinst." },
+          { q: "Zijn mijn gegevens veilig?", a: "Ja. Alle berekeningen worden volledig in uw browser uitgevoerd. Er worden geen gegevens verstuurd naar een server en er wordt niets opgeslagen. Uw financiële informatie verlaat uw apparaat niet." },
         ].map((faq, i) => (
           <div key={i} style={{ padding: "18px 0", borderBottom: "1px solid var(--border)" }}>
             <h3 style={{ fontSize: 15, fontWeight: 600, color: "var(--text)", marginBottom: 6 }}>{faq.q}</h3>
@@ -691,9 +691,9 @@ export function HomePage() {
             <path d="M12 2C9.2 2 7 4.2 7 7v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7c0-2.8-2.2-5-5-5zm-3 5c0-1.7 1.3-3 3-3s3 1.3 3 3v3H9V7z" fill="var(--success)" />
           </svg>
           <div>
-            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--success)", marginBottom: 4 }}>Uw gegevens blijven priv\u00E9</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--success)", marginBottom: 4 }}>Uw gegevens blijven privé</div>
             <div style={{ fontSize: 13, color: "var(--text-sec)", lineHeight: 1.55 }}>
-              Alle berekeningen worden lokaal in uw browser uitgevoerd. Er worden geen gegevens verstuurd of opgeslagen. Uw financi\u00EBle informatie verlaat uw apparaat niet.
+              Alle berekeningen worden lokaal in uw browser uitgevoerd. Er worden geen gegevens verstuurd of opgeslagen. Uw financiële informatie verlaat uw apparaat niet.
             </div>
           </div>
         </div>
