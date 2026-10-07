@@ -4,6 +4,36 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+/* Aan/uit-schakelaar met titel en korte uitleg */
+function Schakelaar({ aan, onChange, titel, uitleg }) {
+  return (
+    <button type="button" role="switch" aria-checked={aan} onClick={() => onChange(!aan)} style={{
+      display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left",
+      padding: "14px 18px", marginBottom: 12, borderRadius: "var(--radius)", cursor: "pointer",
+      border: `1.5px solid ${aan ? "var(--primary-border)" : "var(--border)"}`,
+      background: aan ? "var(--primary-ghost)" : "var(--surface)",
+    }}>
+      <span aria-hidden="true" style={{ flexShrink: 0, width: 38, height: 22, borderRadius: 11, background: aan ? "var(--primary)" : "var(--border)", position: "relative", transition: "background .15s" }}>
+        <span style={{ position: "absolute", top: 3, left: aan ? 19 : 3, width: 16, height: 16, borderRadius: "50%", background: "#fff", transition: "left .15s" }} />
+      </span>
+      <span>
+        <span style={{ display: "block", fontSize: 14, fontWeight: 600, color: "var(--text)" }}>{titel}</span>
+        <span style={{ display: "block", fontSize: 12, color: "var(--text-sec)", marginTop: 2, lineHeight: 1.5 }}>{uitleg}</span>
+      </span>
+    </button>
+  );
+}
+
+function LoondienstSchakelaar({ aan, onChange }) {
+  return <Schakelaar aan={aan} onChange={onChange} titel="Ook inkomen uit loondienst"
+    uitleg="Bij NHG wordt inkomen uit loondienst per jaar opgeteld bij uw ondernemersinkomen." />;
+}
+
+function GewogenSchakelaar({ aan, onChange }) {
+  return <Schakelaar aan={aan} onChange={onChange} titel="Gewogen gemiddelde inkomen (1-2-3 methode)"
+    uitleg="Sommige geldverstrekkers tellen het laatste jaar 3×, het jaar daarvoor 2× en het jaar daarvoor 1× mee. Gunstig bij een groeiende winst." />;
+}
+
 /* ── Calendly ──────────────────────────────────────────────────
    Plak hieronder je Calendly-link tussen de aanhalingstekens,
    bijvoorbeeld "https://calendly.com/lindenburg/kennismaking".
@@ -243,7 +273,11 @@ function Disclaimer({ nhg }) {
 export function IBCalcPage({ nhg }) {
   const [laatsteJaar, setLaatsteJaar] = useState(HUIDIG_JAAR - 1);
   const years = jarenVanaf(laatsteJaar);
-  const [data, setData] = useState([0, 1, 2].map(() => ({ winst: "", bijt: "" })));
+  const [data, setData] = useState([0, 1, 2].map(() => ({ winst: "", bijt: "", loon: "" })));
+  const [metLoon, setMetLoon] = useState(false);
+  const loonActief = nhg && metLoon;
+  const [gewogen, setGewogen] = useState(false);
+  const gewogenActief = !nhg && gewogen;
   const [bal, setBal] = useState({ ev: "", totaalActiva: "", vlActiva: "", vlPassiva: "", or: "", box3: "", achtergest: "", immat: "", stilleReserve: "" });
   const [showBal, setShowBal] = useState(true);
   const [result, setResult] = useState(null);
@@ -253,13 +287,17 @@ export function IBCalcPage({ nhg }) {
 
   const calc = () => {
     const rows = data.map((d, i) => {
-      const w = num(d.winst), b = num(d.bijt);
-      return { year: years[i], winst: w, bijt: b, toets: w - b };
+      const w = num(d.winst), b = num(d.bijt), l = loonActief ? num(d.loon) : 0;
+      return { year: years[i], winst: w, bijt: b, loon: l, toets: w - b + l };
     });
-    const filled = rows.filter((r) => r.winst !== 0);
+    const filled = rows.filter((r) => r.winst !== 0 || r.loon !== 0);
     if (filled.length === 0) return;
 
-    const avg = filled.reduce((s, r) => s + r.toets, 0) / filled.length;
+    // Gewogen: laatste jaar 3×, jaar daarvoor 2×, jaar daarvoor 1× (over de ingevulde jaren)
+    const gewichten = filled.map((_, k) => 3 - (filled.length - 1 - k));
+    const avg = gewogenActief
+      ? filled.reduce((s, r, k) => s + r.toets * gewichten[k], 0) / gewichten.reduce((a, b) => a + b, 0)
+      : filled.reduce((s, r) => s + r.toets, 0) / filled.length;
     const lastYear = filled[filled.length - 1].toets;
     const capped = Math.min(avg, lastYear);
 
@@ -276,7 +314,7 @@ export function IBCalcPage({ nhg }) {
     const hasBal = ev > 0 || ta > 0;
 
     setResult({
-      rows, avg, lastYear, capped, count: filled.length, wasCapped: avg > lastYear,
+      rows, avg, lastYear, capped, count: filled.length, wasCapped: avg > lastYear, gewogen: gewogenActief,
       hasBal, evCorr, taCorr, vaCorr, vp, solvabiliteit, liquiditeit,
       solvOk: solvabiliteit >= 25, liqOk: liquiditeit >= 1,
     });
@@ -293,19 +331,22 @@ export function IBCalcPage({ nhg }) {
         </h1>
         <p style={{ fontSize: 15, color: "var(--text-sec)", margin: 0, lineHeight: 1.6 }}>
           {nhg
-            ? "Bereken uw toetsinkomen als ZZP’er, eenmanszaak of VoF conform NHG-toetskaders, inclusief balanstoets (solvabiliteit ≥25% en liquiditeit ≥1)."
+            ? "Bereken uw toetsinkomen als ZZP’er, eenmanszaak of VoF conform NHG-toetskaders, inclusief balanstoets (solvabiliteit ≥25% en liquiditeit ≥1). NHG is in 2026 mogelijk bij een aankoopbedrag tot € 470.000."
             : "Bereken uw toetsinkomen als ZZP’er, eenmanszaak of VoF conform reguliere normen van geldverstrekkers, inclusief balanstoets."
           }
         </p>
       </div>
 
       <JaarKeuze value={laatsteJaar} onChange={(j) => { setLaatsteJaar(j); setResult(null); }} />
+      {nhg && <LoondienstSchakelaar aan={metLoon} onChange={(v) => { setMetLoon(v); setResult(null); }} />}
+      {!nhg && <GewogenSchakelaar aan={gewogen} onChange={(v) => { setGewogen(v); setResult(null); }} />}
       {years.map((y, i) => (
         <div key={i} style={{ padding: 20, borderRadius: "var(--radius)", background: "var(--surface)", boxShadow: "var(--shadow-sm)", marginBottom: 10 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 14 }}>Boekjaar {y}</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
             <div style={{ flex: "1 1 220px" }}><Input label="Winst uit onderneming" value={data[i].winst} onChange={(v) => upd(i, "winst", v)} hint="Saldo fiscale winstberekening" /></div>
             <div style={{ flex: "1 1 220px" }}><Input label="Bijtelling auto (optioneel)" value={data[i].bijt} onChange={(v) => upd(i, "bijt", v)} hint="Privégebruik auto van de zaak" /></div>
+            {loonActief && <div style={{ flex: "1 1 220px" }}><Input label="Inkomen uit loondienst" value={data[i].loon} onChange={(v) => upd(i, "loon", v)} hint="Bruto fiscaal jaarloon (jaaropgave)" /></div>}
           </div>
         </div>
       ))}
@@ -347,12 +388,12 @@ export function IBCalcPage({ nhg }) {
             <div key={r.year} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: "var(--surface-alt)", borderRadius: "var(--radius-sm)", marginBottom: 6, fontSize: 13 }}>
               <span style={{ color: "var(--text-sec)" }}>{r.year}</span>
               <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-                {r.bijt > 0 && <span style={{ color: "var(--text-ter)", fontSize: 11 }}>{fmt(r.winst)} &minus; {fmt(r.bijt)}</span>}
+                {(r.bijt > 0 || r.loon > 0) && <span style={{ color: "var(--text-ter)", fontSize: 11 }}>{fmt(r.winst)}{r.bijt > 0 ? ` − ${fmt(r.bijt)}` : ""}{r.loon > 0 ? ` + loon ${fmt(r.loon)}` : ""}</span>}
                 <span style={{ fontWeight: 600, color: "var(--text)", minWidth: 72, textAlign: "right" }}>{fmt(r.toets)}</span>
               </div>
             </div>
           ))}
-          <ResultLine label={`Gemiddelde (${result.count} jaar)`} value={fmt(Math.round(result.avg))} />
+          <ResultLine label={result.gewogen ? `Gewogen gemiddelde inkomen, 1-2-3 methode (${result.count} jaar)` : `Gemiddelde (${result.count} jaar)`} value={fmt(Math.round(result.avg))} />
           {result.wasCapped && (
             <div style={{ fontSize: 12, color: "var(--primary)", margin: "6px 0", fontWeight: 500 }}>Gemaximeerd op laatste jaar: {fmt(Math.round(result.lastYear))}</div>
           )}
@@ -403,7 +444,9 @@ export function IBCalcPage({ nhg }) {
 export function DGACalcPage({ nhg }) {
   const [laatsteJaar, setLaatsteJaar] = useState(HUIDIG_JAAR - 1);
   const years = jarenVanaf(laatsteJaar);
-  const [data, setData] = useState([0, 1, 2].map(() => ({ salaris: "", winst: "", bijt: "" })));
+  const [data, setData] = useState([0, 1, 2].map(() => ({ salaris: "", winst: "", bijt: "", loon: "" })));
+  const [metLoon, setMetLoon] = useState(false);
+  const loonActief = nhg && metLoon;
   const [bal, setBal] = useState({ ev: "", totaalActiva: "", vlActiva: "", vlPassiva: "", rcDga: "", box3: "", achtergest: "", immat: "", stilleReserve: "", pensioen: "", dividend: "" });
   const [showBal, setShowBal] = useState(true);
   const [result, setResult] = useState(null);
@@ -416,10 +459,10 @@ export function DGACalcPage({ nhg }) {
 
   const calc = () => {
     const rows = data.map((d, i) => {
-      const s = num(d.salaris), w = num(d.winst), b = num(d.bijt);
-      return { year: years[i], salaris: s, winst: w, bijt: b, box1: s - b };
+      const s = num(d.salaris), w = num(d.winst), b = num(d.bijt), l = loonActief ? num(d.loon) : 0;
+      return { year: years[i], salaris: s, winst: w, bijt: b, loon: l, box1: s - b + l };
     });
-    const filled = rows.filter((r) => r.salaris !== 0 || r.winst !== 0);
+    const filled = rows.filter((r) => r.salaris !== 0 || r.winst !== 0 || r.loon !== 0);
     if (filled.length === 0) return;
     const last = filled[filled.length - 1];
 
@@ -479,13 +522,14 @@ export function DGACalcPage({ nhg }) {
         </h1>
         <p style={{ fontSize: 15, color: "var(--text-sec)", margin: 0, lineHeight: 1.6 }}>
           {nhg
-            ? "Bereken uw toetsinkomen als DGA (≥5% aandeelhouder) conform NHG-toetskaders. Inclusief dubbele balanstoets en overwinst (75%)."
+            ? "Bereken uw toetsinkomen als DGA (≥5% aandeelhouder) conform NHG-toetskaders. Inclusief dubbele balanstoets en overwinst (75%). NHG is in 2026 mogelijk bij een aankoopbedrag tot € 470.000."
             : "Bereken uw toetsinkomen als DGA (≥5% aandeelhouder) conform reguliere normen. Inclusief dubbele balanstoets en overwinst (100%)."
           }
         </p>
       </div>
 
       <JaarKeuze value={laatsteJaar} onChange={(j) => { setLaatsteJaar(j); setResult(null); }} />
+      {nhg && <LoondienstSchakelaar aan={metLoon} onChange={(v) => { setMetLoon(v); setResult(null); }} />}
       {years.map((y, i) => (
         <div key={i} style={{ padding: 20, borderRadius: "var(--radius)", background: "var(--surface)", boxShadow: "var(--shadow-sm)", marginBottom: 10 }}>
           <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 14 }}>Boekjaar {y}</div>
@@ -493,6 +537,7 @@ export function DGACalcPage({ nhg }) {
             <div style={{ flex: "1 1 160px" }}><Input label="DGA-salaris (bruto jaar)" value={data[i].salaris} onChange={(v) => upd(i, "salaris", v)} hint="Jaarlijks bruto salaris" /></div>
             <div style={{ flex: "1 1 160px" }}><Input label="Winst voor belasting BV" value={data[i].winst} onChange={(v) => upd(i, "winst", v)} hint="Resultaat voor Vpb" /></div>
             <div style={{ flex: "1 1 160px" }}><Input label="Bijtelling auto" value={data[i].bijt} onChange={(v) => upd(i, "bijt", v)} hint="Optioneel" /></div>
+            {loonActief && <div style={{ flex: "1 1 160px" }}><Input label="Inkomen uit loondienst" value={data[i].loon} onChange={(v) => upd(i, "loon", v)} hint="Overig loon, niet uit eigen BV" /></div>}
           </div>
         </div>
       ))}
@@ -540,7 +585,7 @@ export function DGACalcPage({ nhg }) {
               <span style={{ color: "var(--text-sec)" }}>{r.year}</span>
               <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
                 <span style={{ color: "var(--text-ter)", fontSize: 11 }}>
-                  Salaris: {fmt(r.salaris)}{r.bijt > 0 ? ` − bijt: ${fmt(r.bijt)}` : ""}
+                  Salaris: {fmt(r.salaris)}{r.bijt > 0 ? ` − bijt: ${fmt(r.bijt)}` : ""}{r.loon > 0 ? ` + loon: ${fmt(r.loon)}` : ""}
                 </span>
                 <span style={{ fontWeight: 600, color: "var(--text)" }}>{fmt(r.box1)}</span>
               </div>
@@ -598,7 +643,7 @@ export function DGACalcPage({ nhg }) {
           <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text-ter)", marginTop: 22, marginBottom: 8, letterSpacing: "0.04em", textTransform: "uppercase" }}>Totaal</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 6 }}>
             <div style={{ display: "flex", justifyContent: "space-between", padding: "11px 16px", background: "var(--primary-ghost)", borderRadius: "var(--radius-sm)", fontSize: 13 }}>
-              <span style={{ color: "var(--primary)" }}>Box 1 (salaris &minus; bijtelling)</span>
+              <span style={{ color: "var(--primary)" }}>Box 1 (salaris &minus; bijtelling{loonActief ? " + loondienst" : ""})</span>
               <span style={{ fontWeight: 600, color: "var(--primary)" }}>{fmt(Math.round(result.cappedBox1))}</span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", padding: "11px 16px", background: "var(--primary-ghost)", borderRadius: "var(--radius-sm)", fontSize: 13 }}>
