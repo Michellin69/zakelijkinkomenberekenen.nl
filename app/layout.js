@@ -8,7 +8,7 @@ export const metadata = {
     template: "%s | zakelijkinkomenberekenen.nl",
   },
   description: "Bereken gratis uw toetsinkomen als ondernemer voor uw hypotheekaanvraag. IB-ondernemer, DGA, ZZP, NHG en regulier. Inclusief balanstoets. Geen registratie nodig.",
-  keywords: ["toetsinkomen berekenen", "zakelijk inkomen", "hypotheek ondernemer", "zzp hypotheek", "dga hypotheek", "nhg ondernemer", "toetsinkomen zzp", "toetsinkomen dga", "balanstoets hypotheek", "rekenexpert"],
+  keywords: ["toetsinkomen berekenen", "zakelijk inkomen", "hypotheek ondernemer", "zzp hypotheek", "dga hypotheek", "nhg ondernemer", "toetsinkomen zzp", "toetsinkomen dga", "balanstoets hypotheek", "hypotheekadvies ondernemer", "hypotheekadviseur ondernemers"],
   openGraph: {
     type: "website",
     locale: "nl_NL",
