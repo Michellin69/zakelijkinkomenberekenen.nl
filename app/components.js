@@ -149,6 +149,900 @@ export function Footer() {
           <div style={{ flex: "1 1 280px" }}>
             <div style={{ fontWeight: 700, fontSize: 16, color: "#fff", marginBottom: 10, letterSpacing: "-0.02em" }}>zakelijkinkomenberekenen.nl</div>
             <p style={{ lineHeight: 1.6, maxWidth: 340 }}>
+              Bereken snel en gratis uw indicatieve toetsinkomen als ondernemer.
+            </p>
+            <p style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Amstelveen</p>
+          </div>
+          <div>
+            <div style={{ color: "#fff", fontWeight: 600, marginBottom: 10, fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase" }}>Calculators</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <Link href="/toetsinkomen-zzp-nhg" style={{ transition: "color .15s" }}>IB-ondernemer NHG</Link>
+              <Link href="/toetsinkomen-zzp" style={{ transition: "color .15s" }}>IB-ondernemer regulier</Link>
+              <Link href="/toetsinkomen-dga-nhg" style={{ transition: "color .15s" }}>DGA / BV NHG</Link>
+              <Link href="/toetsinkomen-dga" style={{ transition: "color .15s" }}>DGA / BV regulier</Link>
+            </div>
+          </div>
+          <div>
+            <div style={{ color: "#fff", fontWeight: 600, marginBottom: 10, fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase" }}>Over ons</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <Link href="/contact">Adviesgesprek aanvragen</Link>
+              <Link href="/veelgestelde-vragen">Veelgestelde vragen</Link>
+              <span>info@zakelijkinkomenberekenen.nl</span>
+            </div>
+          </div>
+        </div>
+        <div style={{ borderTop: "1px solid rgba(255,255,255,0.12)", paddingTop: 20, display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: 8, fontSize: 12, color: "rgba(255,255,255,0.35)" }}>
+          <span>&copy; {new Date().getFullYear()} Lindenburg Financieel Advies &middot; Amstelveen</span>
+          <span>Indicatieve berekening &mdash; raadpleeg altijd een hypotheekadviseur</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ── Shared UI ─────────────────────────────────────────────── */
+export function Section({ children, style }) {
+  return <section style={{ maxWidth: 780, margin: "0 auto", padding: "0 24px", ...style }}>{children}</section>;
+}
+
+export function Input({ label, value, onChange, hint, prefix = "€" }) {
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <label style={{ display: "block", fontSize: 12, fontWeight: 500, color: "var(--text-sec)", marginBottom: 5, letterSpacing: "0.01em" }}>{label}</label>
+      <div style={{ display: "flex", border: "1.5px solid var(--border)", borderRadius: "var(--radius-sm)", overflow: "hidden", background: "#fff", transition: "border-color .2s" }}>
+        {prefix && (
+          <span style={{ padding: "0 11px", fontSize: 13, color: "var(--text-ter)", fontWeight: 500, background: "var(--surface-alt)", borderRight: "1px solid var(--border-light)", lineHeight: "42px" }}>{prefix}</span>
+        )}
+        <input
+          type="text" inputMode="numeric" value={value} placeholder="0"
+          onChange={(e) => onChange(e.target.value.replace(/[^0-9.\-]/g, ""))}
+          style={{ flex: 1, padding: "0 12px", height: 42, border: "none", outline: "none", fontSize: 14, color: "var(--text)", background: "transparent" }}
+        />
+      </div>
+      {hint && <div style={{ fontSize: 11, color: "var(--text-ter)", marginTop: 4 }}>{hint}</div>}
+    </div>
+  );
+}
+
+function StatusBadge({ ok, label }) {
+  return (
+    <span style={{
+      display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 10px", borderRadius: 4,
+      fontSize: 12, fontWeight: 600,
+      background: ok ? "var(--success-bg)" : "var(--danger-bg)",
+      color: ok ? "var(--success)" : "var(--danger)",
+    }}>
+      {ok ? "✓" : "✗"} {label}
+    </span>
+  );
+}
+
+function CollapsibleSection({ title, open, onToggle, children }) {
+  return (
+    <div style={{ marginTop: 20 }}>
+      <button onClick={onToggle} style={{
+        width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center",
+        padding: "14px 18px", borderRadius: "var(--radius)", border: "none",
+        background: "var(--surface)", boxShadow: "var(--shadow-sm)", cursor: "pointer", marginBottom: open ? 12 : 0,
+      }}>
+        <span style={{ fontSize: 14, fontWeight: 600, color: "var(--text)" }}>{title}</span>
+        <svg width="16" height="16" fill="none" stroke="var(--text-ter)" strokeWidth="2" style={{ transition: "transform .2s", transform: open ? "rotate(180deg)" : "" }}>
+          <path d="M4 6l4 4 4-4" />
+        </svg>
+      </button>
+      {open && children}
+    </div>
+  );
+}
+
+function ResultLine({ label, value, bold, accent }) {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "9px 0", borderBottom: "1px solid var(--border-light)" }}>
+      <span style={{ fontSize: 13, color: accent ? "var(--primary)" : "var(--text-sec)", fontWeight: bold ? 600 : 400 }}>{label}</span>
+      <span style={{ fontSize: 14, color: accent ? "var(--primary)" : "var(--text)", fontWeight: bold || accent ? 600 : 400 }}>{value}</span>
+    </div>
+  );
+}
+
+function CTA() {
+  return (
+    <div style={{ marginTop: 28, padding: 24, borderRadius: "var(--radius)", background: "var(--primary)", color: "#fff" }}>
+      <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>Professionele analyse nodig?</div>
+      <p style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", lineHeight: 1.6, margin: "0 0 16px" }}>
+        Wij maken een professionele inkomensanalyse op maat en begeleiden u door het volledige hypotheektraject bij alle geldverstrekkers.
+      </p>
+      <Link href="/contact" style={{
+        display: "inline-block", padding: "11px 26px", borderRadius: 8, background: "#fff",
+        color: "var(--primary)", fontSize: 13, fontWeight: 600,
+      }}>
+        Vrijblijvend adviesgesprek
+      </Link>
+    </div>
+  );
+}
+
+function Disclaimer({ nhg }) {
+  return (
+    <div style={{ marginTop: 16, padding: 14, borderRadius: 8, background: "var(--warn-bg)", border: "1px solid var(--warn-border)", fontSize: 12, lineHeight: 1.6, color: "var(--warn)" }}>
+      <strong>Disclaimer:</strong> Dit is een indicatieve berekening{nhg ? " conform NHG-toetskaders" : ""}. Geldverstrekkers kunnen afwijkende criteria hanteren. Raadpleeg een hypotheekadviseur voor een definitieve beoordeling.
+    </div>
+  );
+}
+
+/* ── IB Calculator ─────────────────────────────────────────── */
+export function IBCalcPage({ nhg }) {
+  const [laatsteJaar, setLaatsteJaar] = useState(HUIDIG_JAAR - 1);
+  const years = jarenVanaf(laatsteJaar);
+  const [data, setData] = useState([0, 1, 2].map(() => ({ winst: "", bijt: "", loon: "" })));
+  const [metLoon, setMetLoon] = useState(false);
+  const loonActief = nhg && metLoon;
+  const [gewogen, setGewogen] = useState(false);
+  const gewogenActief = !nhg && gewogen;
+  const [bal, setBal] = useState({ ev: "", totaalActiva: "", vlActiva: "", vlPassiva: "", or: "", box3: "", achtergest: "", immat: "", stilleReserve: "" });
+  const [showBal, setShowBal] = useState(true);
+  const [result, setResult] = useState(null);
+
+  const upd = (i, k, v) => { const n = [...data]; n[i] = { ...n[i], [k]: v }; setData(n); };
+  const updB = (k, v) => setBal({ ...bal, [k]: v });
+
+  const calc = () => {
+    const rows = data.map((d, i) => {
+      const w = num(d.winst), b = num(d.bijt), l = loonActief ? num(d.loon) : 0;
+      return { year: years[i], winst: w, bijt: b, loon: l, toets: w - b + l };
+    });
+    const filled = rows.filter((r) => r.winst !== 0 || r.loon !== 0);
+    if (filled.length === 0) return;
+
+    // Gewogen: laatste jaar 3×, jaar daarvoor 2×, jaar daarvoor 1× (over de ingevulde jaren)
+    const gewichten = filled.map((_, k) => 3 - (filled.length - 1 - k));
+    const avg = gewogenActief
+      ? filled.reduce((s, r, k) => s + r.toets * gewichten[k], 0) / gewichten.reduce((a, b) => a + b, 0)
+      : filled.reduce((s, r) => s + r.toets, 0) / filled.length;
+    const lastYear = filled[filled.length - 1].toets;
+    const capped = Math.min(avg, lastYear);
+
+    const ev = num(bal.ev), ta = num(bal.totaalActiva), va = num(bal.vlActiva), vp = num(bal.vlPassiva);
+    const or_ = num(bal.or), box3 = num(bal.box3), achtergest = num(bal.achtergest);
+    const immat = num(bal.immat), stilleRes = num(bal.stilleReserve);
+
+    const evCorr = ev + or_ + box3 + achtergest - immat + stilleRes;
+    const taCorr = ta + box3 - immat + stilleRes;
+    const vaCorr = va + box3;
+
+    const solvabiliteit = taCorr > 0 ? (evCorr / taCorr) * 100 : 0;
+    const liquiditeit = vp > 0 ? vaCorr / vp : (vaCorr > 0 ? 999 : 0);
+    const hasBal = ev > 0 || ta > 0;
+
+    setResult({
+      rows, avg, lastYear, capped, count: filled.length, wasCapped: avg > lastYear, gewogen: gewogenActief,
+      hasBal, evCorr, taCorr, vaCorr, vp, solvabiliteit, liquiditeit,
+      solvOk: solvabiliteit >= 25, liqOk: liquiditeit >= 1,
+    });
+  };
+
+  return (
+    <Section style={{ paddingTop: 40, paddingBottom: 64 }}>
+      <div style={{ marginBottom: 32 }}>
+        <div style={{ display: "inline-block", padding: "4px 12px", borderRadius: "var(--radius-sm)", background: nhg ? "var(--primary-ghost)" : "var(--surface-alt)", border: `1px solid ${nhg ? "var(--primary-border)" : "var(--border)"}`, color: nhg ? "var(--primary)" : "var(--text-sec)", fontSize: 11, fontWeight: 600, marginBottom: 14 }}>
+          {nhg ? "NHG" : "Regulier"}
+        </div>
+        <h1 style={{ fontSize: "clamp(22px, 3.5vw, 28px)", fontWeight: 700, margin: "0 0 8px", color: "var(--text)", letterSpacing: "-0.025em", lineHeight: 1.2 }}>
+          Toetsinkomen berekenen{nhg ? " met NHG" : ""} &mdash; IB-ondernemer
+        </h1>
+        <p style={{ fontSize: 15, color: "var(--text-sec)", margin: 0, lineHeight: 1.6 }}>
+          {nhg
+            ? "Bereken uw toetsinkomen als ZZP’er, eenmanszaak of VoF conform NHG-toetskaders, inclusief balanstoets (solvabiliteit ≥25% en liquiditeit ≥1). NHG is in 2026 mogelijk bij een aankoopbedrag tot € 470.000."
+            : "Bereken uw toetsinkomen als ZZP’er, eenmanszaak of VoF conform reguliere normen van geldverstrekkers, inclusief balanstoets."
+          }
+        </p>
+      </div>
+
+      <JaarKeuze value={laatsteJaar} onChange={(j) => { setLaatsteJaar(j); setResult(null); }} />
+      {nhg && <LoondienstSchakelaar aan={metLoon} onChange={(v) => { setMetLoon(v); setResult(null); }} />}
+      {!nhg && <GewogenSchakelaar aan={gewogen} onChange={(v) => { setGewogen(v); setResult(null); }} />}
+      {years.map((y, i) => (
+        <div key={i} style={{ padding: 20, borderRadius: "var(--radius)", background: "var(--surface)", boxShadow: "var(--shadow-sm)", marginBottom: 10 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 14 }}>Boekjaar {y}</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+            <div style={{ flex: "1 1 220px" }}><Input label="Winst uit onderneming" value={data[i].winst} onChange={(v) => upd(i, "winst", v)} hint="Saldo fiscale winstberekening" /></div>
+            <div style={{ flex: "1 1 220px" }}><Input label="Bijtelling auto (optioneel)" value={data[i].bijt} onChange={(v) => upd(i, "bijt", v)} hint="Privégebruik auto van de zaak" /></div>
+            {loonActief && <div style={{ flex: "1 1 220px" }}><Input label="Inkomen uit loondienst" value={data[i].loon} onChange={(v) => upd(i, "loon", v)} hint="Bruto fiscaal jaarloon (jaaropgave)" /></div>}
+          </div>
+        </div>
+      ))}
+
+      <CollapsibleSection title="Balanstoets (eindbalans laatste boekjaar)" open={showBal} onToggle={() => setShowBal(!showBal)}>
+        <div style={{ padding: 20, borderRadius: "var(--radius)", background: "var(--surface)", boxShadow: "var(--shadow-sm)", marginBottom: 10 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-sec)", marginBottom: 14 }}>Balansposten</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+            <div style={{ flex: "1 1 200px" }}><Input label="Eigen vermogen" value={bal.ev} onChange={(v) => updB("ev", v)} /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Totaal activa (balanstotaal)" value={bal.totaalActiva} onChange={(v) => updB("totaalActiva", v)} /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Vlottende activa" value={bal.vlActiva} onChange={(v) => updB("vlActiva", v)} /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Kort vreemd vermogen" value={bal.vlPassiva} onChange={(v) => updB("vlPassiva", v)} hint="Vlottende passiva / kortlopende schulden" /></div>
+          </div>
+          <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-sec)", marginTop: 18, marginBottom: 14 }}>Balanscorrecties (optioneel)</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+            <div style={{ flex: "1 1 200px" }}><Input label="Oudedagsreserve (FOR)" value={bal.or} onChange={(v) => updB("or", v)} hint="Positief op EV" /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Box 3 vermogen (liquide)" value={bal.box3} onChange={(v) => updB("box3", v)} hint="Positief op EV, activa en vlottend" /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Achtergestelde leningen" value={bal.achtergest} onChange={(v) => updB("achtergest", v)} hint="Positief op EV" /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Immateriële vaste activa" value={bal.immat} onChange={(v) => updB("immat", v)} hint="Negatief op EV en balanstotaal" /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Stille reserve onroerend goed" value={bal.stilleReserve} onChange={(v) => updB("stilleReserve", v)} hint="Positief op EV en balanstotaal" /></div>
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      <button onClick={calc} style={{
+        width: "100%", padding: "14px", borderRadius: 8, border: "none",
+        background: "var(--primary)", color: "#fff", fontSize: 14, fontWeight: 600,
+        cursor: "pointer", marginTop: 14, transition: "opacity .15s",
+      }}>
+        Toetsinkomen berekenen
+      </button>
+
+      {result && (
+        <div id="resultaat" style={{ marginTop: 28, padding: 28, borderRadius: 12, background: "var(--surface)", boxShadow: "var(--shadow-lg)", border: "2px solid var(--primary)" }}>
+          <div style={{ fontSize: 15, fontWeight: 600, color: "var(--text)", marginBottom: 18 }}>Resultaat</div>
+
+          <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text-ter)", marginBottom: 8, letterSpacing: "0.04em", textTransform: "uppercase" }}>Inkomen</div>
+          {result.rows.map((r) => (
+            <div key={r.year} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: "var(--surface-alt)", borderRadius: "var(--radius-sm)", marginBottom: 6, fontSize: 13 }}>
+              <span style={{ color: "var(--text-sec)" }}>{r.year}</span>
+              <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+                {(r.bijt > 0 || r.loon > 0) && <span style={{ color: "var(--text-ter)", fontSize: 11 }}>{fmt(r.winst)}{r.bijt > 0 ? ` − ${fmt(r.bijt)}` : ""}{r.loon > 0 ? ` + loon ${fmt(r.loon)}` : ""}</span>}
+                <span style={{ fontWeight: 600, color: "var(--text)", minWidth: 72, textAlign: "right" }}>{fmt(r.toets)}</span>
+              </div>
+            </div>
+          ))}
+          <ResultLine label={result.gewogen ? `Gewogen gemiddelde inkomen, 1-2-3 methode (${result.count} jaar)` : `Gemiddelde (${result.count} jaar)`} value={fmt(Math.round(result.avg))} />
+          {result.wasCapped && (
+            <div style={{ fontSize: 12, color: "var(--primary)", margin: "6px 0", fontWeight: 500 }}>Gemaximeerd op laatste jaar: {fmt(Math.round(result.lastYear))}</div>
+          )}
+
+          {result.hasBal && (
+            <>
+              <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text-ter)", marginTop: 22, marginBottom: 8, letterSpacing: "0.04em", textTransform: "uppercase" }}>Balanstoets</div>
+              <ResultLine label="Eigen vermogen na correcties" value={fmt(Math.round(result.evCorr))} />
+              <ResultLine label="Balanstotaal na correcties" value={fmt(Math.round(result.taCorr))} />
+              <ResultLine label="Vlottende activa na correcties" value={fmt(Math.round(result.vaCorr))} />
+              <ResultLine label="Kort vreemd vermogen" value={fmt(Math.round(result.vp))} />
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid var(--border-light)" }}>
+                <span style={{ fontSize: 13, color: "var(--text-sec)" }}>Solvabiliteit</span>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: "var(--text)" }}>{pct(result.solvabiliteit)}</span>
+                  <StatusBadge ok={result.solvOk} label={result.solvOk ? "≥25%" : "<25%"} />
+                </div>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid var(--border-light)" }}>
+                <span style={{ fontSize: 13, color: "var(--text-sec)" }}>Liquiditeit</span>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: "var(--text)" }}>{result.liquiditeit >= 999 ? ">99" : result.liquiditeit.toFixed(2)}</span>
+                  <StatusBadge ok={result.liqOk} label={result.liqOk ? "≥1,00" : "<1,00"} />
+                </div>
+              </div>
+              {(!result.solvOk || !result.liqOk) && (
+                <div style={{ marginTop: 10, padding: 14, borderRadius: 8, background: "var(--danger-bg)", border: "1px solid #FECACA", fontSize: 12, color: "var(--danger)", lineHeight: 1.6 }}>
+                  De balanstoets wordt niet gehaald. Dit kan betekenen dat een hypotheek op basis van deze cijfers niet mogelijk is. Neem contact op voor advies over mogelijke oplossingen.
+                </div>
+              )}
+            </>
+          )}
+
+          <div style={{ marginTop: 20, padding: "16px 20px", borderRadius: "var(--radius)", background: "var(--primary)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.8)" }}>Indicatief toetsinkomen</span>
+            <span style={{ fontSize: 24, fontWeight: 700, color: "#fff", letterSpacing: "-0.02em" }}>{fmt(Math.round(result.capped))}</span>
+          </div>
+
+          <Disclaimer nhg={nhg} />
+          <CTA />
+        </div>
+      )}
+    </Section>
+  );
+}
+
+/* ── DGA Calculator ────────────────────────────────────────── */
+export function DGACalcPage({ nhg }) {
+  const [laatsteJaar, setLaatsteJaar] = useState(HUIDIG_JAAR - 1);
+  const years = jarenVanaf(laatsteJaar);
+  const [data, setData] = useState([0, 1, 2].map(() => ({ salaris: "", winst: "", bijt: "", loon: "" })));
+  const [metLoon, setMetLoon] = useState(false);
+  const loonActief = nhg && metLoon;
+  const [bal, setBal] = useState({ ev: "", totaalActiva: "", vlActiva: "", vlPassiva: "", rcDga: "", box3: "", achtergest: "", immat: "", stilleReserve: "", pensioen: "", dividend: "" });
+  const [showBal, setShowBal] = useState(true);
+  const [result, setResult] = useState(null);
+
+  const upd = (i, k, v) => { const n = [...data]; n[i] = { ...n[i], [k]: v }; setData(n); };
+  const updB = (k, v) => setBal({ ...bal, [k]: v });
+
+  const factor = nhg ? 0.75 : 1.0;
+  const factorLabel = nhg ? "75%" : "100%";
+
+  const calc = () => {
+    const rows = data.map((d, i) => {
+      const s = num(d.salaris), w = num(d.winst), b = num(d.bijt), l = loonActief ? num(d.loon) : 0;
+      return { year: years[i], salaris: s, winst: w, bijt: b, loon: l, box1: s - b + l };
+    });
+    const filled = rows.filter((r) => r.salaris !== 0 || r.winst !== 0 || r.loon !== 0);
+    if (filled.length === 0) return;
+    const last = filled[filled.length - 1];
+
+    const avgBox1 = filled.reduce((s, r) => s + r.box1, 0) / filled.length;
+    const cappedBox1 = Math.min(avgBox1, last.box1);
+    const avgWinst = filled.reduce((s, r) => s + r.winst, 0) / filled.length;
+    const cappedWinst = Math.min(avgWinst, last.winst);
+
+    const ev = num(bal.ev), ta = num(bal.totaalActiva), va = num(bal.vlActiva), vp = num(bal.vlPassiva);
+    const rcRaw = num(bal.rcDga), rcCorr = Math.max(0, rcRaw - 17500);
+    const box3 = num(bal.box3), achtergest = num(bal.achtergest), immat = num(bal.immat);
+    const stilleRes = num(bal.stilleReserve), pensioen = num(bal.pensioen), dividend = num(bal.dividend);
+
+    const evCorr = ev - rcCorr + box3 + achtergest - immat + stilleRes + pensioen;
+    const taCorr = ta - rcCorr + box3 - immat + stilleRes;
+    const vaCorr = va - rcCorr + box3;
+
+    const solvabiliteit = taCorr > 0 ? (evCorr / taCorr) * 100 : 0;
+    const liquiditeit = vp > 0 ? vaCorr / vp : (vaCorr > 0 ? 999 : 0);
+    const solvOk = solvabiliteit >= 25;
+    const liqOk = liquiditeit >= 1;
+    const hasBal = ev > 0 || ta > 0;
+
+    let solvRuimte = 0, liqRuimte = 0, maxUitkering = 0, beschikbareOverwinst = 0, overwinst = 0;
+
+    if (hasBal && solvOk && liqOk) {
+      solvRuimte = (evCorr - 0.25 * taCorr) / 0.75;
+      liqRuimte = vaCorr - vp;
+      maxUitkering = Math.max(0, Math.min(solvRuimte, liqRuimte));
+      beschikbareOverwinst = maxUitkering + dividend;
+      beschikbareOverwinst = Math.min(beschikbareOverwinst, last.winst);
+      beschikbareOverwinst = Math.min(beschikbareOverwinst, cappedWinst);
+      overwinst = beschikbareOverwinst * factor;
+    } else if (!hasBal) {
+      overwinst = cappedWinst * factor;
+    }
+
+    const totaal = cappedBox1 + overwinst;
+
+    setResult({
+      rows, cappedBox1, avgBox1, avgWinst: cappedWinst, overwinst, totaal,
+      count: filled.length, box1Capped: avgBox1 > last.box1, winstCapped: avgWinst > last.winst,
+      hasBal, evCorr, taCorr, vaCorr, vp, rcCorr,
+      solvabiliteit, liquiditeit, solvOk, liqOk,
+      solvRuimte, liqRuimte, maxUitkering, beschikbareOverwinst, dividend, factor,
+    });
+  };
+
+  return (
+    <Section style={{ paddingTop: 40, paddingBottom: 64 }}>
+      <div style={{ marginBottom: 32 }}>
+        <div style={{ display: "inline-block", padding: "4px 12px", borderRadius: "var(--radius-sm)", background: nhg ? "var(--primary-ghost)" : "var(--surface-alt)", border: `1px solid ${nhg ? "var(--primary-border)" : "var(--border)"}`, color: nhg ? "var(--primary)" : "var(--text-sec)", fontSize: 11, fontWeight: 600, marginBottom: 14 }}>
+          {nhg ? "NHG" : "Regulier"}
+        </div>
+        <h1 style={{ fontSize: "clamp(22px, 3.5vw, 28px)", fontWeight: 700, margin: "0 0 8px", color: "var(--text)", letterSpacing: "-0.025em", lineHeight: 1.2 }}>
+          Toetsinkomen berekenen{nhg ? " met NHG" : ""} &mdash; DGA / BV
+        </h1>
+        <p style={{ fontSize: 15, color: "var(--text-sec)", margin: 0, lineHeight: 1.6 }}>
+          {nhg
+            ? "Bereken uw toetsinkomen als DGA (≥5% aandeelhouder) conform NHG-toetskaders. Inclusief dubbele balanstoets en overwinst (75%). NHG is in 2026 mogelijk bij een aankoopbedrag tot € 470.000."
+            : "Bereken uw toetsinkomen als DGA (≥5% aandeelhouder) conform reguliere normen. Inclusief dubbele balanstoets en overwinst (tot 100%, afhankelijk van de geldverstrekker)."
+          }
+        </p>
+      </div>
+
+      <JaarKeuze value={laatsteJaar} onChange={(j) => { setLaatsteJaar(j); setResult(null); }} />
+      {nhg && <LoondienstSchakelaar aan={metLoon} onChange={(v) => { setMetLoon(v); setResult(null); }} />}
+      {years.map((y, i) => (
+        <div key={i} style={{ padding: 20, borderRadius: "var(--radius)", background: "var(--surface)", boxShadow: "var(--shadow-sm)", marginBottom: 10 }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 14 }}>Boekjaar {y}</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+            <div style={{ flex: "1 1 160px" }}><Input label="DGA-salaris (bruto jaar)" value={data[i].salaris} onChange={(v) => upd(i, "salaris", v)} hint="Inclusief bijtelling auto, zoals in uw IB-aangifte" /></div>
+            <div style={{ flex: "1 1 160px" }}><Input label="Winst voor belasting BV" value={data[i].winst} onChange={(v) => upd(i, "winst", v)} hint="Resultaat voor Vpb" /></div>
+            <div style={{ flex: "1 1 160px" }}><Input label="Bijtelling auto" value={data[i].bijt} onChange={(v) => upd(i, "bijt", v)} hint="Optioneel, wordt van het salaris afgetrokken" /></div>
+            {loonActief && <div style={{ flex: "1 1 160px" }}><Input label="Inkomen uit loondienst" value={data[i].loon} onChange={(v) => upd(i, "loon", v)} hint="Overig loon, niet uit eigen BV" /></div>}
+          </div>
+        </div>
+      ))}
+
+      <CollapsibleSection title="Dubbele balanstoets (eindbalans laatste boekjaar)" open={showBal} onToggle={() => setShowBal(!showBal)}>
+        <div style={{ padding: 20, borderRadius: "var(--radius)", background: "var(--surface)", boxShadow: "var(--shadow-sm)", marginBottom: 10 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-sec)", marginBottom: 14 }}>Balansposten</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+            <div style={{ flex: "1 1 200px" }}><Input label="Eigen vermogen" value={bal.ev} onChange={(v) => updB("ev", v)} /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Totaal activa (balanstotaal)" value={bal.totaalActiva} onChange={(v) => updB("totaalActiva", v)} /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Vlottende activa" value={bal.vlActiva} onChange={(v) => updB("vlActiva", v)} /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Vlottende passiva" value={bal.vlPassiva} onChange={(v) => updB("vlPassiva", v)} hint="Kortlopende schulden" /></div>
+          </div>
+          <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-sec)", marginTop: 18, marginBottom: 14 }}>Balanscorrecties</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
+            <div style={{ flex: "1 1 200px" }}><Input label="R/C DGA (vordering op DGA)" value={bal.rcDga} onChange={(v) => updB("rcDga", v)} hint="Vrijstelling tot €17.500" /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Box 3 vermogen (liquide)" value={bal.box3} onChange={(v) => updB("box3", v)} hint="Positief op EV, activa en vlottend" /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Achtergestelde leningen" value={bal.achtergest} onChange={(v) => updB("achtergest", v)} hint="Positief op EV" /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Immateriële vaste activa" value={bal.immat} onChange={(v) => updB("immat", v)} hint="Negatief op EV en balanstotaal" /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Stille reserve onroerend goed" value={bal.stilleReserve} onChange={(v) => updB("stilleReserve", v)} hint="Positief op EV en balanstotaal" /></div>
+            <div style={{ flex: "1 1 200px" }}><Input label="Pensioen eigen beheer / stamrecht" value={bal.pensioen} onChange={(v) => updB("pensioen", v)} hint="Positief op EV" /></div>
+          </div>
+          <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-sec)", marginTop: 18, marginBottom: 14 }}>Reeds uitgekeerd dividend</div>
+          <div style={{ maxWidth: 300 }}>
+            <Input label="Uitgekeerd dividend laatste boekjaar" value={bal.dividend} onChange={(v) => updB("dividend", v)} hint="Verhoogt beschikbare overwinst" />
+          </div>
+        </div>
+      </CollapsibleSection>
+
+      <button onClick={calc} style={{
+        width: "100%", padding: "14px", borderRadius: 8, border: "none",
+        background: "var(--primary)", color: "#fff", fontSize: 14, fontWeight: 600,
+        cursor: "pointer", marginTop: 14, transition: "opacity .15s",
+      }}>
+        Toetsinkomen berekenen
+      </button>
+
+      {result && (
+        <div id="resultaat" style={{ marginTop: 28, padding: 28, borderRadius: 12, background: "var(--surface)", boxShadow: "var(--shadow-lg)", border: "2px solid var(--primary)" }}>
+          <div style={{ fontSize: 15, fontWeight: 600, color: "var(--text)", marginBottom: 18 }}>Resultaat</div>
+
+          <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text-ter)", marginBottom: 8, letterSpacing: "0.04em", textTransform: "uppercase" }}>Box 1 (salaris)</div>
+          {result.rows.map((r) => (
+            <div key={r.year} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", background: "var(--surface-alt)", borderRadius: "var(--radius-sm)", marginBottom: 6, fontSize: 13, flexWrap: "wrap", gap: 6 }}>
+              <span style={{ color: "var(--text-sec)" }}>{r.year}</span>
+              <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+                <span style={{ color: "var(--text-ter)", fontSize: 11 }}>
+                  Salaris: {fmt(r.salaris)}{r.bijt > 0 ? ` − bijt: ${fmt(r.bijt)}` : ""}{r.loon > 0 ? ` + loon: ${fmt(r.loon)}` : ""}
+                </span>
+                <span style={{ fontWeight: 600, color: "var(--text)" }}>{fmt(r.box1)}</span>
+              </div>
+            </div>
+          ))}
+          <ResultLine label="Box 1 (gem. max laatste jaar)" value={fmt(Math.round(result.cappedBox1))} bold accent />
+
+          {result.hasBal && (
+            <>
+              <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text-ter)", marginTop: 22, marginBottom: 8, letterSpacing: "0.04em", textTransform: "uppercase" }}>Balanstoets</div>
+              <ResultLine label="Eigen vermogen na correcties" value={fmt(Math.round(result.evCorr))} />
+              <ResultLine label="Balanstotaal na correcties" value={fmt(Math.round(result.taCorr))} />
+              {result.rcCorr > 0 && <ResultLine label="R/C DGA correctie (boven €17.500)" value={fmt(Math.round(result.rcCorr))} />}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid var(--border-light)" }}>
+                <span style={{ fontSize: 13, color: "var(--text-sec)" }}>Solvabiliteit</span>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: "var(--text)" }}>{pct(result.solvabiliteit)}</span>
+                  <StatusBadge ok={result.solvOk} label={result.solvOk ? "≥25%" : "<25%"} />
+                </div>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderBottom: "1px solid var(--border-light)" }}>
+                <span style={{ fontSize: 13, color: "var(--text-sec)" }}>Liquiditeit</span>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: "var(--text)" }}>{result.liquiditeit >= 999 ? ">99" : result.liquiditeit.toFixed(2)}</span>
+                  <StatusBadge ok={result.liqOk} label={result.liqOk ? "≥1,00" : "<1,00"} />
+                </div>
+              </div>
+
+              {result.solvOk && result.liqOk && (
+                <>
+                  <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text-ter)", marginTop: 18, marginBottom: 8, letterSpacing: "0.04em", textTransform: "uppercase" }}>Dubbele balanstoets</div>
+                  <ResultLine label="Solvabiliteitsruimte" value={fmt(Math.round(result.solvRuimte))} />
+                  <ResultLine label="Liquiditeitsruimte (werkkapitaal)" value={fmt(Math.round(result.liqRuimte))} />
+                  <ResultLine label="Max. uitkering (laagste)" value={fmt(Math.round(result.maxUitkering))} bold />
+                  {result.dividend > 0 && <ResultLine label="+ Reeds uitgekeerd dividend" value={fmt(Math.round(result.dividend))} />}
+                  <ResultLine label="Beschikbare overwinst" value={fmt(Math.round(result.beschikbareOverwinst))} bold />
+                  <ResultLine label={`Overwinstfactor (${factorLabel})`} value={fmt(Math.round(result.overwinst))} accent bold />
+                </>
+              )}
+
+              {(!result.solvOk || !result.liqOk) && (
+                <div style={{ marginTop: 10, padding: 14, borderRadius: 8, background: "var(--danger-bg)", border: "1px solid #FECACA", fontSize: 12, color: "var(--danger)", lineHeight: 1.6 }}>
+                  De balanstoets wordt niet gehaald. Er kan geen overwinst worden meegenomen. Het toetsinkomen bestaat alleen uit Box 1 (DGA-salaris). Neem contact op voor advies over mogelijke oplossingen.
+                </div>
+              )}
+            </>
+          )}
+
+          {!result.hasBal && (
+            <div style={{ marginTop: 16, padding: 14, borderRadius: 8, background: "var(--warn-bg)", border: "1px solid var(--warn-border)", fontSize: 12, color: "var(--warn)", lineHeight: 1.6 }}>
+              Geen balanscijfers ingevuld. De overwinst is berekend zonder balanstoets. In de praktijk kan de dubbele balanstoets de overwinst beperken.
+            </div>
+          )}
+
+          <div style={{ fontSize: 11, fontWeight: 600, color: "var(--text-ter)", marginTop: 22, marginBottom: 8, letterSpacing: "0.04em", textTransform: "uppercase" }}>Totaal</div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 6 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "11px 16px", background: "var(--primary-ghost)", borderRadius: "var(--radius-sm)", fontSize: 13 }}>
+              <span style={{ color: "var(--primary)" }}>Box 1 (salaris &minus; bijtelling{loonActief ? " + loondienst" : ""})</span>
+              <span style={{ fontWeight: 600, color: "var(--primary)" }}>{fmt(Math.round(result.cappedBox1))}</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "11px 16px", background: "var(--primary-ghost)", borderRadius: "var(--radius-sm)", fontSize: 13 }}>
+              <span style={{ color: "var(--primary)" }}>Overwinst ({factorLabel}){result.hasBal && result.solvOk && result.liqOk ? " na balanstoets" : ""}</span>
+              <span style={{ fontWeight: 600, color: "var(--primary)" }}>{fmt(Math.round(result.overwinst))}</span>
+            </div>
+          </div>
+
+          <div style={{ padding: "16px 20px", borderRadius: "var(--radius)", background: "var(--primary)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: 13, fontWeight: 500, color: "rgba(255,255,255,0.8)" }}>Indicatief toetsinkomen</span>
+            <span style={{ fontSize: 24, fontWeight: 700, color: "#fff", letterSpacing: "-0.02em" }}>{fmt(Math.round(result.totaal))}</span>
+          </div>
+
+          <Disclaimer nhg={nhg} />
+          <CTA />
+        </div>
+      )}
+    </Section>
+  );
+}
+
+/* ── Home Page ─────────────────────────────────────────────── */
+export function HomePage() {
+  const calcs = [
+    { href: "/toetsinkomen-zzp-nhg", tag: "NHG", title: "IB-ondernemer", sub: "Eenmanszaak · ZZP · VoF · Maatschap", desc: "Toetsinkomen conform NHG-toetskaders met balanstoets (solvabiliteit en liquiditeit)." },
+    { href: "/toetsinkomen-zzp", tag: "Regulier", title: "IB-ondernemer", sub: "Eenmanszaak · ZZP · VoF · Maatschap", desc: "Toetsinkomen conform reguliere normen van geldverstrekkers met balanstoets." },
+    { href: "/toetsinkomen-dga-nhg", tag: "NHG", title: "DGA / BV", sub: "Holding · Werk-BV · ≥5% aandeelhouder", desc: "DGA-salaris + overwinst (75%) met dubbele balanstoets." },
+    { href: "/toetsinkomen-dga", tag: "Regulier", title: "DGA / BV", sub: "Holding · Werk-BV · ≥5% aandeelhouder", desc: "DGA-salaris + overwinst (tot 100%) met dubbele balanstoets." },
+  ];
+
+  return (
+    <div>
+      {/* Hero */}
+      <div style={{ padding: "80px 24px 64px", textAlign: "center" }}>
+        <div style={{ maxWidth: 640, margin: "0 auto" }}>
+          <p style={{ fontSize: 12, fontWeight: 600, color: "var(--primary)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 16 }}>
+            De rekenexpert voor ondernemers
+          </p>
+          <h1 style={{ fontSize: "clamp(30px, 5vw, 46px)", fontWeight: 700, lineHeight: 1.12, color: "var(--text)", margin: "0 0 18px", letterSpacing: "-0.03em" }}>
+            Bereken uw toetsinkomen als ondernemer
+          </h1>
+          <p style={{ fontSize: 17, color: "var(--text-sec)", lineHeight: 1.6, margin: 0 }}>
+            Gratis en direct. Inclusief balanstoets. Weet wat uw indicatieve toetsinkomen is voor een hypotheekaanvraag.
+          </p>
+        </div>
+      </div>
+
+      {/* Calculator cards */}
+      <Section>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))", gap: 14 }}>
+          {calcs.map((c) => (
+            <Link key={c.href} href={c.href} style={{ display: "block", padding: 24, borderRadius: 12, background: "var(--surface)", boxShadow: "var(--shadow-sm)", transition: "box-shadow .2s, transform .2s" }}>
+              <div style={{ display: "inline-block", padding: "4px 10px", borderRadius: 4, background: c.tag === "NHG" ? "var(--primary-ghost)" : "var(--surface-alt)", color: c.tag === "NHG" ? "var(--primary)" : "var(--text-sec)", fontSize: 11, fontWeight: 600, marginBottom: 12, border: `1px solid ${c.tag === "NHG" ? "var(--primary-border)" : "var(--border)"}` }}>{c.tag}</div>
+              <h3 style={{ fontSize: 18, fontWeight: 600, margin: "0 0 4px", color: "var(--text)" }}>{c.title}</h3>
+              <div style={{ fontSize: 12, color: "var(--primary)", fontWeight: 500, marginBottom: 10 }}>{c.sub}</div>
+              <p style={{ fontSize: 13, color: "var(--text-sec)", lineHeight: 1.55, margin: 0 }}>{c.desc}</p>
+              <div style={{ marginTop: 16, fontSize: 13, fontWeight: 600, color: "var(--primary)" }}>Berekenen</div>
+            </Link>
+          ))}
+        </div>
+      </Section>
+
+      {/* How it works */}
+      <Section style={{ marginTop: 64 }}>
+        <h2 style={{ fontSize: 24, fontWeight: 700, textAlign: "center", color: "var(--text)", marginBottom: 12, letterSpacing: "-0.025em" }}>Hoe werkt het?</h2>
+        <p style={{ textAlign: "center", fontSize: 14, color: "var(--text-sec)", marginBottom: 32, maxWidth: 500, marginLeft: "auto", marginRight: "auto" }}>
+          In drie stappen een indicatie van uw toetsinkomen. Geen registratie, geen kosten.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(210px, 1fr))", gap: 16 }}>
+          {[
+            { n: "1", t: "Kies uw situatie", d: "IB-ondernemer of DGA, met of zonder NHG" },
+            { n: "2", t: "Vul uw cijfers in", d: "Winst, salaris en balanscijfers van de afgelopen jaren" },
+            { n: "3", t: "Ontvang uw indicatie", d: "Toetsinkomen inclusief balanstoets, direct op uw scherm" },
+          ].map((s) => (
+            <div key={s.n} style={{ padding: 22, borderRadius: "var(--radius)", background: "var(--surface)", boxShadow: "var(--shadow-sm)", textAlign: "center" }}>
+              <div style={{ width: 30, height: 30, borderRadius: "50%", background: "var(--primary)", color: "#fff", fontSize: 13, fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" }}>{s.n}</div>
+              <div style={{ fontSize: 14, fontWeight: 600, color: "var(--text)", marginBottom: 5 }}>{s.t}</div>
+              <div style={{ fontSize: 13, color: "var(--text-sec)", lineHeight: 1.5 }}>{s.d}</div>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* FAQ */}
+      <Section style={{ marginTop: 64 }}>
+        <h2 style={{ fontSize: 24, fontWeight: 700, textAlign: "center", color: "var(--text)", marginBottom: 32, letterSpacing: "-0.025em" }}>Veelgestelde vragen</h2>
+        {[
+          { q: "Wat is toetsinkomen?", a: "Het toetsinkomen is het inkomen waarmee een geldverstrekker berekent hoeveel hypotheek u maximaal kunt krijgen. Voor ondernemers is dat geen vast salaris, maar een berekening op basis van de winst of het salaris van de afgelopen jaren, waarbij ook wordt gekeken of uw onderneming financieel gezond is." },
+          { q: "Wat is het verschil tussen toetsinkomen met en zonder NHG?", a: "Voor een IB-ondernemer wordt met NHG altijd gekeken naar de winst uit uw eenmanszaak of vof, plus eventueel inkomen uit loondienst, over de afgelopen drie jaar. Zonder NHG gebruiken geldverstrekkers ook andere rekenmethodes om uw inkomen te bepalen, zoals een gewogen gemiddelde. Voor een DGA telt met NHG maximaal 75% van de overwinst mee als toetsinkomen. Zonder NHG verschilt dit per geldverstrekker en kan soms ook 100% van de overwinst worden meegenomen." },
+          { q: "Tot welk bedrag is een hypotheek met NHG mogelijk?", a: "In 2026 is een hypotheek met NHG mogelijk bij een aankoopbedrag tot maximaal € 470.000. Ligt het aankoopbedrag hoger, dan sluit u een hypotheek zonder NHG af. De NHG-grens wordt elk jaar opnieuw vastgesteld." },
+          { q: "Wat is de balanstoets?", a: "Met de balanstoets beoordeelt de geldverstrekker of uw onderneming financieel gezond is. Er wordt gekeken naar de solvabiliteit (hoeveel van het totale vermogen eigen vermogen is) en de liquiditeit (of de onderneming haar kortlopende schulden kan betalen). Bij een DGA komt daar de dubbele balanstoets bij: er wordt berekend hoeveel er maximaal uit de BV kan worden uitgekeerd met behoud van voldoende solvabiliteit en liquiditeit. De laagste van die twee bepaalt hoeveel overwinst kan meetellen." },
+        ].map((faq, i) => (
+          <div key={i} style={{ padding: "18px 0", borderBottom: "1px solid var(--border)" }}>
+            <h3 style={{ fontSize: 15, fontWeight: 600, color: "var(--text)", marginBottom: 6 }}>{faq.q}</h3>
+            <p style={{ fontSize: 14, color: "var(--text-sec)", lineHeight: 1.6, margin: 0 }}>{faq.a}</p>
+          </div>
+        ))}
+        <div style={{ textAlign: "center", marginTop: 24 }}>
+          <Link href="/veelgestelde-vragen" style={{ display: "inline-block", padding: "11px 24px", borderRadius: 8, border: "1.5px solid var(--primary)", color: "var(--primary)", fontSize: 14, fontWeight: 600 }}>
+            Bekijk alle veelgestelde vragen
+          </Link>
+        </div>
+      </Section>
+
+      {/* CTA */}
+      <Section style={{ marginTop: 56 }}>
+        <div style={{ padding: 32, borderRadius: 14, background: "var(--primary)", color: "#fff", textAlign: "center" }}>
+          <h3 style={{ fontSize: 22, fontWeight: 700, margin: "0 0 10px", letterSpacing: "-0.02em" }}>Professionele analyse nodig?</h3>
+          <p style={{ fontSize: 15, color: "rgba(255,255,255,0.75)", lineHeight: 1.6, margin: "0 0 22px", maxWidth: 480, marginLeft: "auto", marginRight: "auto" }}>
+            Wij maken een professionele inkomensanalyse op maat en begeleiden u door het volledige hypotheektraject bij alle geldverstrekkers.
+          </p>
+          <Link href="/contact" style={{ display: "inline-block", padding: "13px 30px", borderRadius: 8, background: "#fff", color: "var(--primary)", fontSize: 14, fontWeight: 600 }}>
+            Vrijblijvend contact opnemen
+          </Link>
+        </div>
+      </Section>
+
+      {/* Privacy note */}
+      <Section style={{ marginTop: 40 }}>
+        <div style={{ display: "flex", gap: 14, alignItems: "flex-start", padding: 20, borderRadius: "var(--radius)", background: "var(--success-bg)", border: "1px solid rgba(22,101,52,0.1)" }}>
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" style={{ flexShrink: 0, marginTop: 2 }}>
+            <path d="M12 2C9.2 2 7 4.2 7 7v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7c0-2.8-2.2-5-5-5zm-3 5c0-1.7 1.3-3 3-3s3 1.3 3 3v3H9V7z" fill="var(--success)" />
+          </svg>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--success)", marginBottom: 4 }}>Uw gegevens blijven privé</div>
+            <div style={{ fontSize: 13, color: "var(--text-sec)", lineHeight: 1.55 }}>
+              Alle berekeningen worden lokaal in uw browser uitgevoerd. Er worden geen gegevens verstuurd of opgeslagen. Uw financiële informatie verlaat uw apparaat niet.
+            </div>
+          </div>
+        </div>
+      </Section>
+    </div>
+  );
+}
+
+/* ── Contact Page ──────────────────────────────────────────── */
+export function ContactPage() {
+  const embedUrl = CALENDLY_URL
+    ? `${CALENDLY_URL}${CALENDLY_URL.includes("?") ? "&" : "?"}hide_event_type_details=1&hide_gdpr_banner=1&background_color=ffffff&text_color=111827&primary_color=1a5632`
+    : "";
+
+  const Icoon = ({ d }) => (
+    <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 32, height: 32, borderRadius: 8, background: "var(--primary-light)", flexShrink: 0 }}>
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="var(--primary)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>
+    </span>
+  );
+
+  const kenmerken = [
+    { d: "M12 7v5l3 2M12 21a9 9 0 100-18 9 9 0 000 18z", t: "30 minuten" },
+    { d: "M15 10l4.55-2.28A1 1 0 0121 8.62v6.76a1 1 0 01-1.45.9L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z", t: "Telefonisch of via video" },
+    { d: "M9 12l2 2 4-4M12 21a9 9 0 100-18 9 9 0 000 18z", t: "Kosteloos en vrijblijvend" },
+  ];
+
+  const bespreken = [
+    "Uw onderneming en de cijfers van de afgelopen jaren",
+    "Welk toetsinkomen haalbaar is, met NHG en zonder NHG",
+    "Wat de balanstoets voor uw situatie betekent",
+    "Welke stukken nodig zijn voor uw aanvraag",
+  ];
+
+  return (
+    <Section style={{ maxWidth: 1080, paddingTop: 48, paddingBottom: 64 }}>
+      <div style={{ maxWidth: 640, marginBottom: 32 }}>
+        <div style={{ fontSize: 12, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--primary)", marginBottom: 10 }}>Adviesgesprek</div>
+        <h1 style={{ fontSize: "clamp(24px, 4vw, 34px)", fontWeight: 700, margin: "0 0 12px", color: "var(--text)", letterSpacing: "-0.03em", lineHeight: 1.15 }}>
+          Plan direct een kennismakingsgesprek
+        </h1>
+        <p style={{ fontSize: 15, color: "var(--text-sec)", margin: 0, lineHeight: 1.65 }}>
+          Kies hieronder een moment dat u uitkomt. We bespreken uw situatie en wat er nodig is voor een sterke hypotheekaanvraag als ondernemer.
+        </p>
+      </div>
+
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 20, alignItems: "flex-start" }}>
+        {/* Linkerkolom: wat u kunt verwachten */}
+        <aside style={{ flex: "1 1 280px", maxWidth: "100%", display: "flex", flexDirection: "column", gap: 16 }}>
+          <div style={{ padding: 24, borderRadius: 14, background: "var(--surface)", boxShadow: "var(--shadow-md)" }}>
+            <div style={{ fontSize: 13, color: "var(--text-sec)", marginBottom: 4 }}>Lindenburg Financieel Advies</div>
+            <h2 style={{ fontSize: 18, fontWeight: 700, margin: "0 0 18px", color: "var(--text)", letterSpacing: "-0.02em" }}>Kennismakingsgesprek</h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              {kenmerken.map((k) => (
+                <div key={k.t} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                  <Icoon d={k.d} />
+                  <span style={{ fontSize: 14, color: "var(--text)", fontWeight: 500 }}>{k.t}</span>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ height: 1, background: "var(--border-light)", margin: "22px 0 18px" }} />
+
+            <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 12 }}>Wat we bespreken</div>
+            {bespreken.map((b) => (
+              <div key={b} style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 10 }}>
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" style={{ flexShrink: 0, marginTop: 2 }}>
+                  <path d="M5 12l5 5L20 7" stroke="var(--primary)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span style={{ fontSize: 13.5, color: "var(--text-sec)", lineHeight: 1.55 }}>{b}</span>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ padding: 24, borderRadius: 14, background: "var(--primary)", color: "#fff" }}>
+            <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 6 }}>Liever eerst mailen?</div>
+            <p style={{ fontSize: 13, color: "rgba(255,255,255,0.7)", margin: "0 0 14px", lineHeight: 1.55 }}>Stel uw vraag per e-mail, dan reageren wij zo snel mogelijk.</p>
+            <a href="mailto:info@zakelijkinkomenberekenen.nl" style={{ fontSize: 14, fontWeight: 500, color: "#fff", textDecoration: "underline", textUnderlineOffset: 3, wordBreak: "break-all" }}>
+              info@zakelijkinkomenberekenen.nl
+            </a>
+          </div>
+        </aside>
+
+        {/* Rechterkolom: agenda */}
+        <div id="afspraak" style={{ flex: "2 1 460px", maxWidth: "100%", borderRadius: 14, background: "var(--surface)", boxShadow: "var(--shadow-lg)", overflow: "hidden", border: "1px solid var(--border-light)" }}>
+          <div style={{ padding: "18px 24px", borderBottom: "1px solid var(--border-light)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+            <div style={{ fontSize: 15, fontWeight: 600, color: "var(--text)" }}>Kies een datum en tijd</div>
+            <div style={{ fontSize: 12, color: "var(--text-sec)" }}>U ontvangt direct een bevestiging per e-mail</div>
+          </div>
+          {embedUrl ? (
+            <div style={{ position: "relative", minHeight: 700 }}>
+              <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "var(--text-ter)" }}>
+                Agenda wordt geladen…
+              </div>
+              <iframe
+                src={embedUrl}
+                title="Afspraak inplannen bij Lindenburg Financieel Advies"
+                loading="lazy"
+                style={{ position: "relative", display: "block", width: "100%", height: 700, border: "none" }}
+              />
+            </div>
+          ) : (
+            <div style={{ padding: "28px 24px" }}>
+              <p style={{ fontSize: 14, color: "var(--text)", lineHeight: 1.6, margin: "0 0 16px" }}>
+                Online inplannen is binnenkort beschikbaar. Stuur ons tot die tijd een e-mail, dan nemen wij contact met u op voor een afspraak.
+              </p>
+              <a href="mailto:info@zakelijkinkomenberekenen.nl?subject=Kennismakingsgesprek%20aanvragen" style={{
+                display: "inline-block", padding: "11px 26px", borderRadius: 8, background: "var(--primary)",
+                color: "#fff", fontSize: 13, fontWeight: 600,
+              }}>
+                Mail ons voor een afspraak
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div style={{ marginTop: 28, fontSize: 13, color: "var(--text-ter)", textAlign: "center" }}>
+        Gespecialiseerd in ondernemersfinanciering
+      </div>
+    </Section>
+  );
+}"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+/* Aan/uit-schakelaar met titel en korte uitleg */
+function Schakelaar({ aan, onChange, titel, uitleg }) {
+  return (
+    <button type="button" role="switch" aria-checked={aan} onClick={() => onChange(!aan)} style={{
+      display: "flex", alignItems: "center", gap: 12, width: "100%", textAlign: "left",
+      padding: "14px 18px", marginBottom: 12, borderRadius: "var(--radius)", cursor: "pointer",
+      border: `1.5px solid ${aan ? "var(--primary-border)" : "var(--border)"}`,
+      background: aan ? "var(--primary-ghost)" : "var(--surface)",
+    }}>
+      <span aria-hidden="true" style={{ flexShrink: 0, width: 38, height: 22, borderRadius: 11, background: aan ? "var(--primary)" : "var(--border)", position: "relative", transition: "background .15s" }}>
+        <span style={{ position: "absolute", top: 3, left: aan ? 19 : 3, width: 16, height: 16, borderRadius: "50%", background: "#fff", transition: "left .15s" }} />
+      </span>
+      <span>
+        <span style={{ display: "block", fontSize: 14, fontWeight: 600, color: "var(--text)" }}>{titel}</span>
+        <span style={{ display: "block", fontSize: 12, color: "var(--text-sec)", marginTop: 2, lineHeight: 1.5 }}>{uitleg}</span>
+      </span>
+    </button>
+  );
+}
+
+function LoondienstSchakelaar({ aan, onChange }) {
+  return <Schakelaar aan={aan} onChange={onChange} titel="Ook inkomen uit loondienst"
+    uitleg="Bij NHG wordt inkomen uit loondienst per jaar opgeteld bij uw ondernemersinkomen." />;
+}
+
+function GewogenSchakelaar({ aan, onChange }) {
+  return <Schakelaar aan={aan} onChange={onChange} titel="Gewogen gemiddelde inkomen (1-2-3 methode)"
+    uitleg="Sommige geldverstrekkers tellen het laatste jaar 3×, het jaar daarvoor 2× en het jaar daarvoor 1× mee. Gunstig bij een groeiende winst." />;
+}
+
+/* ── Calendly ──────────────────────────────────────────────────
+   Plak hieronder je Calendly-link tussen de aanhalingstekens,
+   bijvoorbeeld "https://calendly.com/lindenburg/kennismaking".
+   Laat leeg ("") zolang je nog geen link hebt: dan toont de
+   contactpagina in plaats van de agenda een mailknop. */
+const CALENDLY_URL = "https://calendly.com/zakelijkinkomenberekenen-info/30min";
+
+/* ── Helpers ───────────────────────────────────────────────── */
+const fmt = (n) =>
+  new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(n);
+const pct = (n) =>
+  new Intl.NumberFormat("nl-NL", { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(n) + "%";
+const num = (v) => parseFloat(v) || 0;
+
+/* Boekjaren: de bezoeker kiest het laatste boekjaar (vorig jaar of dit jaar);
+   de twee jaren daarvoor volgen automatisch. Schuift elk jaar vanzelf mee. */
+const HUIDIG_JAAR = new Date().getFullYear();
+const JAAR_OPTIES = [HUIDIG_JAAR - 1, HUIDIG_JAAR];
+const jarenVanaf = (laatste) => [laatste - 2, laatste - 1, laatste];
+
+function JaarKeuze({ value, onChange }) {
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 12 }}>
+      <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)" }}>Inkomen per boekjaar</div>
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ fontSize: 12, color: "var(--text-sec)" }}>Laatste boekjaar</span>
+        <div role="group" aria-label="Laatste boekjaar" style={{ display: "inline-flex", border: "1.5px solid var(--border)", borderRadius: "var(--radius-sm)", overflow: "hidden", background: "#fff" }}>
+          {JAAR_OPTIES.map((j) => (
+            <button key={j} type="button" onClick={() => onChange(j)} aria-pressed={value === j} style={{
+              padding: "6px 14px", border: "none", cursor: "pointer", fontSize: 13,
+              fontWeight: value === j ? 600 : 400,
+              background: value === j ? "var(--primary)" : "transparent",
+              color: value === j ? "#fff" : "var(--text-sec)",
+            }}>{j}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Nav ───────────────────────────────────────────────────── */
+export function Nav() {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+
+  const links = [
+    { href: "/", label: "Home" },
+    { href: "/toetsinkomen-zzp-nhg", label: "IB NHG" },
+    { href: "/toetsinkomen-zzp", label: "IB Regulier" },
+    { href: "/toetsinkomen-dga-nhg", label: "DGA NHG" },
+    { href: "/toetsinkomen-dga", label: "DGA Regulier" },
+    { href: "/veelgestelde-vragen", label: "FAQ" },
+    { href: "/contact", label: "Contact" },
+  ];
+
+  const isActive = (href) => pathname === href;
+
+  return (
+    <nav style={{ position: "sticky", top: 0, zIndex: 100, background: "rgba(250,250,249,0.88)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", borderBottom: "1px solid var(--border)" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 60 }}>
+        <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 34, height: 34, borderRadius: 8, background: "var(--primary)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: 13, letterSpacing: "-0.02em" }}>ZI</div>
+          <span style={{ fontWeight: 600, fontSize: 15, color: "var(--text)", letterSpacing: "-0.02em" }}>
+            zakelijkinkomenberekenen<span style={{ color: "var(--primary)" }}>.nl</span>
+          </span>
+        </Link>
+
+        <div className="nav-desktop" style={{ display: "flex", gap: 2, alignItems: "center" }}>
+          {links.map((l) => (
+            <Link key={l.href} href={l.href} style={{
+              padding: "7px 14px", borderRadius: "var(--radius-sm)", fontSize: 13, fontWeight: isActive(l.href) ? 600 : 400,
+              color: isActive(l.href) ? "var(--primary)" : "var(--text-sec)",
+              background: isActive(l.href) ? "var(--primary-ghost)" : "transparent",
+              transition: "all .15s",
+            }}>{l.label}</Link>
+          ))}
+        </div>
+
+        <button className="nav-mobile-btn" onClick={() => setOpen(!open)} style={{
+          display: "none", alignItems: "center", justifyContent: "center",
+          background: "none", border: "none", cursor: "pointer", padding: 6, borderRadius: 6,
+        }}>
+          <svg width="22" height="22" fill="none" stroke="var(--text)" strokeWidth="2" strokeLinecap="round">
+            {open ? <path d="M6 6l10 10M6 16L16 6" /> : <path d="M4 7h14M4 12h14M4 17h14" />}
+          </svg>
+        </button>
+      </div>
+
+      {open && (
+        <div className="mobile-menu" style={{ background: "var(--bg)", borderBottom: "1px solid var(--border)", padding: "6px 16px 14px" }}>
+          {links.map((l) => (
+            <Link key={l.href} href={l.href} onClick={() => setOpen(false)} style={{
+              display: "block", padding: "11px 14px", borderRadius: "var(--radius-sm)", fontSize: 14,
+              fontWeight: isActive(l.href) ? 600 : 400,
+              color: isActive(l.href) ? "var(--primary)" : "var(--text)",
+              background: isActive(l.href) ? "var(--primary-ghost)" : "transparent",
+              marginBottom: 2,
+            }}>{l.label}</Link>
+          ))}
+        </div>
+      )}
+    </nav>
+  );
+}
+
+/* ── Footer ────────────────────────────────────────────────── */
+export function Footer() {
+  return (
+    <footer style={{ background: "var(--primary)", color: "rgba(255,255,255,0.6)", padding: "48px 24px 32px", marginTop: 80, fontSize: 13 }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 48, marginBottom: 32 }}>
+          <div style={{ flex: "1 1 280px" }}>
+            <div style={{ fontWeight: 700, fontSize: 16, color: "#fff", marginBottom: 10, letterSpacing: "-0.02em" }}>zakelijkinkomenberekenen.nl</div>
+            <p style={{ lineHeight: 1.6, maxWidth: 340 }}>
               Een initiatief van Lindenburg Financieel Advies. Bereken snel en gratis uw indicatieve toetsinkomen als ondernemer.
             </p>
             <p style={{ marginTop: 8, fontSize: 12, color: "rgba(255,255,255,0.4)" }}>Amstelveen</p>
