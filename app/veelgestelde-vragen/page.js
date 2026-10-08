@@ -59,6 +59,7 @@ const GROEPEN = [
     vragen: [
       { q: "Hoe betrouwbaar is de uitkomst van de calculator?", a: "De calculator geeft een indicatie op basis van gangbare rekenregels. Iedere geldverstrekker hanteert eigen normen en uitzonderingen, en details in uw jaarcijfers kunnen de uitkomst flink veranderen. Gebruik de uitkomst als startpunt; voor een aanvraag is een professionele inkomensanalyse nodig." },
       { q: "Zijn mijn gegevens veilig?", a: "Ja. Alle berekeningen worden volledig in uw eigen browser uitgevoerd. Er worden geen gegevens naar een server verstuurd en er wordt niets opgeslagen." },
+      { q: "Wat is het verschil tussen een rekenexpert en een hypotheekadviseur voor ondernemers?", a: "Een rekenexpert stelt tegen betaling uw inkomen vast op basis van uw jaarcijfers. Daarbij moet u vooraf aangeven voor welke geldverstrekker het inkomen wordt vastgesteld, terwijl het inkomen per geldverstrekker sterk kan verschillen. Als hypotheekadviseur voor ondernemers denken wij met u mee: we kijken welke geldverstrekker het beste bij uw situatie past en kunnen ook maatwerkaanvragen voorleggen bij de geldverstrekker. Door onze jarenlange ervaring en kennis kunnen wij goed inschatten wat wel en niet mogelijk is." },
       { q: "Wat kost een kennismakingsgesprek?", a: "Het kennismakingsgesprek is kosteloos en vrijblijvend. We bespreken uw situatie en wat er nodig is voor uw hypotheekaanvraag, zodat u weet waar u aan toe bent." },
     ],
   },
