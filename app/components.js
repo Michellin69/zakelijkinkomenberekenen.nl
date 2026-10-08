@@ -680,7 +680,7 @@ export function HomePage() {
       <div style={{ padding: "80px 24px 64px", textAlign: "center" }}>
         <div style={{ maxWidth: 640, margin: "0 auto" }}>
           <p style={{ fontSize: 12, fontWeight: 600, color: "var(--primary)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 16 }}>
-            De rekenexpert voor ondernemers
+            Hypotheekadvies voor ondernemers
           </p>
           <h1 style={{ fontSize: "clamp(30px, 5vw, 46px)", fontWeight: 700, lineHeight: 1.12, color: "var(--text)", margin: "0 0 18px", letterSpacing: "-0.03em" }}>
             Bereken uw toetsinkomen als ondernemer
